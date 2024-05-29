@@ -1,0 +1,21 @@
+from django.urls import path
+from . import views
+from django.contrib.auth.views import LoginView,LogoutView
+
+
+urlpatterns = [
+	
+	path('customer_signup/', views.customer_signup_view, name='customer_signup'),
+	path('customer_signin/', views.customer_signin_view, name='customer_signin'),
+	path('signup/', views.signup_view, name='signup'),
+	path('restaurant_profile/', views.create_restaurant_profile, name='restaurant_profile'),
+	path('customer_profile/', views.create_customer_profile, name='customer_profile'),
+	path('signin/', views.signin_view, name='signin'),
+	path('afterlogin/', views.afterlogin_view,name='afterlogin'),
+	path('logout', views.Logout,name='logout'),
+	path('verify_account/', views.verify_restaurant_account, name='verify_account')
+
+
+]
+
+

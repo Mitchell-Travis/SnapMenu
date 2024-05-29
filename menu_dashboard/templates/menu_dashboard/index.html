@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta content="Codescandy" name="author" />
+      <title>SnapMenu</title>
+
+      <link href="../../../static/menu_dashboard/libs/slick-carousel/slick/slick.css" rel="stylesheet" />
+      <link href="../../../static/menu_dashboard/libs/slick-carousel/slick/slick-theme.css" rel="stylesheet" />
+      <link href="../../../static/menu_dashboard/libs/tiny-slider/dist/tiny-slider.css" rel="stylesheet" />
+
+      <!-- Favicon icon-->
+      <link rel="shortcut icon" type="image/x-icon" href="../../../static/menu_dashboard/images/favicon/favicon.ico" />
+
+      <!-- Libs CSS -->
+      <link href="../../../static/menu_dashboard/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+      <link href="../../../static/menu_dashboard/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
+      <link href="../../../static/menu_dashboard/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+      <!-- Theme CSS -->
+      <link rel="stylesheet" href="../../../static/menu_dashboard/css/theme.min.css" />
+   </head>
+
+   <body>
+
+      <!-- navigation -->
+      <header>
+         <div class="container">
+            <div class="row align-items-center pt-2">
+               <div class="col-xl-3 col-lg-8 col-7 d-flex">
+                  <div class="dropdown selectBox">
+                    
+                  </div>
+                 
+
+            </div>
+
+               <div class="col-xxl-4 col-xl-5 col-lg-3 d-none d-lg-block">
+                  <div class="d-flex align-items-center justify-content-between ms-4">
+                     <div class="text-center">
+                        <div class="dropdown">
+                           <a href="#" class="text-reset" data-bs-toggle="dropdown" aria-expanded="false">
+                              <div class="lh-1">
+                                 <div class="position-relative d-inline-block mb-2">
+                                    <i class="bi bi-bell fs-4"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                       1
+                                       <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                 </div>
+                                 <p class="mb-0 d-none d-xl-block small">Notification</p>
+                              </div>
+                           </a>
+
+                           <div class="dropdown-menu dropdown-menu-lg p-0">
+                              <div>
+                                 <h6 class="px-4 border-bottom py-3 mb-0">Notification</h6>
+                                 <p class="mb-0 px-4 py-3">
+                                    <a href="#">Sign in</a>
+                                    or
+                                    <a href="#">register</a>
+                                    in or so you don t have to enter your details every time
+                                 </p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="ms-6 text-center">
+                        <a href="#" class="text-reset" data-bs-toggle="modal" data-bs-target="#userModal">
+                           <div class="lh-1">
+                              <div class="mb-2">
+                                 <i class="bi bi-person-circle fs-4"></i>
+                              </div>
+                              <p class="mb-0 d-none d-xl-block small">Sign up</p>
+                           </div>
+                        </a>
+                     </div>
+                     <div class="ms-6 text-center">
+                        <a href="../pages/account-orders.html" class="text-reset">
+                           <div class="lh-1">
+                              <div class="mb-2">
+                                 <i class="bi bi-archive fs-4"></i>
+                              </div>
+                              <p class="mb-0 d-none d-xl-block small">My Orders</p>
+                           </div>
+                        </a>
+                     </div>
+                     <div class="text-center ms-6">
+                        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" href="#offcanvasExample" role="button" aria-controls="offcanvasRight" class="text-reset">
+                           <div class="text-center">
+                              <div>
+                                 <i class="bi bi-cart2 fs-4"></i>
+                              </div>
+                              <p class="mb-0 d-none d-xl-block small">Shopping Cart</p>
+                           </div>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </header>
+
+      
+      
+<!-- Shop Cart -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header border-bottom">
+        <div class="text-start">
+            <h5 id="offcanvasRightLabel" class="mb-0 fs-4">My Cart</h5>
+        </div>
+
+        <div>
+           <h5 class="mb-0 fs-5">Total: <span id="cartTotal" class="fw-bold">$0.00</span></h5> <!-- Total amount display -->
+        </div>
+
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div>
+            <ul class="list-group list-group-flush" id="cartItems">
+                <!-- Cart items will be dynamically added here -->
+            </ul>
+            <div class="d-flex justify-content-between mt-4">
+                <a href="#!" class="btn btn-dark">Back to menu</a>
+                <button id="checkoutButton" class="btn btn-primary" type="button">Check Out</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+     
+
+      <!-- Modal -->
+      <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+               <div class="modal-header border-0">
+                  <h5 class="modal-title fs-3 fw-bold" id="userModalLabel">Sign Up</h5>
+
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <form>
+                     <div class="mb-3">
+                        <label for="fullName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="Enter Your Name" required="" />
+                     </div>
+                     <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter Email address" required="" />
+                     </div>
+
+                     <div class="mb-5">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter Password" required="" />
+                        <small class="form-text">
+                           By Signup, you agree to our
+                           <a href="javascript:void(0)">Terms of Service</a>
+                           &
+                           <a href="javascript:void(0)">Privacy Policy</a>
+                        </small>
+                     </div>
+
+                     <button type="submit" class="btn btn-primary">Sign Up</button>
+                  </form>
+               </div>
+               <div class="modal-footer border-0 justify-content-center">
+                  Already have an account?
+                  <a href="#">Sign in</a>
+               </div>
+            </div>
+         </div>
+      </div>
+
+    
+    <div class="bg-white position-fixed bottom-0 w-100 z-1 shadow-lg d-block d-lg-none text-center">
+   <div class="d-flex justify-content-between align-items-center px-3">
+      <!-- Search Icon with Modal -->
+      <div class="w-25 py-4 text-center">
+         <button class="navbar-toggler collapsed d-lg-none" type="button" data-bs-toggle="modal" data-bs-target="#searchModal" aria-controls="searchModal" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-search"></i>
+         </button>
+      </div>
+
+      <!-- Notification Icon -->
+      <div class="w-25 py-4 text-center">
+          <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" href="#offcanvasExample" role="button" aria-controls="offcanvasRight" class="text-inherit">
+              <div class="position-relative d-inline-block">
+                  <i class="fas fa-bell fa-lg"></i>
+                  <span class="position-absolute top-0 start-100 translate-middle badge bg-danger d-none">
+                      <span class="visually-hidden">unread messages</span>
+                  </span>
+              </div>
+          </a>
+      </div>
+
+      <!-- User Icon -->
+      <div class="w-25 py-4 text-center">
+         <a href="javascript:void(0)" class="text-inherit" data-bs-toggle="modal" data-bs-target="#userModal">
+            <i class="fas fa-user-circle fa-lg"></i>
+         </a>
+      </div>
+
+      <!-- Orders Icon -->
+      <div class="w-25 py-4 text-center">
+         <a href="../pages/account-orders.html" class="text-inherit">
+            <i class="fas fa-archive fa-lg"></i>
+         </a>
+      </div>
+
+
+      <!-- Cart Icon -->
+<div class="w-25 py-4 text-center">
+    <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" href="#offcanvasExample" role="button" aria-controls="offcanvasRight" class="text-inherit">
+        <div class="position-relative d-inline-block">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge bg-danger d-none">0</span>
+        </div>
+    </a>
+</div>
+
+      <!-- Category Icon -->
+      <!-- Category Icon -->
+    <div class="w-25 py-4 text-center">
+       <a class="text-inherit" href="{% url 'category-menu' %}" aria-label="Category Menu">
+          <i class="fas fa-th fa-lg"></i>
+       </a>
+    </div>
+   </div>
+</div>
+
+
+
+         
+<!-- Popular Products Start-->
+<section class="my-lg-14 my-8">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-6">
+                <h3 class="mb-0">Our Menu</h3>
+
+            </div>
+        </div>
+
+        
+       <div class="row g-4 row-cols-lg-5 row-cols-2 row-cols-md-3">
+       {% for category_products in allProds %}
+           {% for product in category_products %}
+               <div class="col">
+                   <div class="card card-product">
+                       <div class="card-body">
+                           <div class="text-center position-relative">
+                               <div class="position-absolute top-0 start-0">
+                                   <span class="badge bg-danger"></span>
+                               </div>
+                               <img src="{{ product.product_image.url }}" alt="{{ product.name }}" class="mb-2 img-fluid" style="height: 100px;">
+                               <div class="card-product-action">
+                                   <a href="#!" class="btn-action" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                                       <i class="bi bi-eye" data-bs-toggle="tooltip" data-bs-html="true" title="Quick View"></i>
+                                   </a>
+                                   <a href="#!" class="btn-action" data-bs-toggle="tooltip" data-bs-html="true" title="Wishlist"><i class="bi bi-heart"></i></a>
+                                   <a href="#!" class="btn-action" data-bs-toggle="tooltip" data-bs-html="true" title="Compare"><i class="bi bi-arrow-left-right"></i></a>
+                               </div>
+                           </div>
+                           <h2 id="name-{{ product.id }}" class="fs-6"><a href="./pages/shop-single.html"  class="text-inherit text-decoration-none" >{{ product.name }}</a></h2>
+                           <div>
+                               <!-- Replace this with your actual rating data if available -->
+                               <small class="text-warning">
+                                   <i class="bi bi-star-fill"></i>
+                                   <i class="bi bi-star-fill"></i>
+                                   <i class="bi bi-star-fill"></i>
+                                   <i class="bi bi-star-fill"></i>
+                                   <i class="bi bi-star-half"></i>
+                               </small>
+                               <span class="text-muted small">4.5(149)</span>
+                           </div>
+                           <div class="d-flex justify-content-between align-items-center mt-3">
+                               <div>
+                                   <span id="price-{{ product.id }}" class="text-dark">{{ product.price }}</span>
+                                   <!-- Add your original price if available -->
+                                   <span id="original-price-{{ product.id }}" class="text-decoration-line-through text-muted">{{ product.original_price }}</span>
+                               </div>
+                               <div>
+                                   <!-- Add to Cart Button -->
+                                   <button id="add-to-cart-{{ product.id }}" class="btn btn-primary btn-sm cart" data-product-id="{{ product.id }}">Add</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           {% endfor %}
+       {% endfor %}
+      </div>
+
+        </section>
+         
+
+      <!-- Javascript-->
+      <!-- Add jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+      <!-- Libs JS -->
+      <script src="../../../static/menu_dashboard/libs/jquery/dist/jquery.min.js"></script>
+      <script src="../../../static/menu_dashboard/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="../../../static/menu_dashboard/libs/simplebar/dist/simplebar.min.js"></script>
+
+      <!-- Theme JS -->
+      <script src="../../../static/menu_dashboard/js/theme.min.js"></script>
+
+      <script src="../../../static/menu_dashboard/js/vendors/jquery.min.js"></script>
+      <script src="../../../static/menu_dashboard/js/vendors/countdown.js"></script>
+      <script src="../../../static/menu_dashboard/libs/slick-carousel/slick/slick.min.js"></script>
+      <script src="../../../static/menu_dashboard/js/vendors/slick-slider.js"></script>
+      <script src="../../../static/menu_dashboard/libs/tiny-slider/dist/min/tiny-slider.js"></script>
+      <script src="../../../static/menu_dashboard/js/vendors/tns-slider.js"></script>
+      <script src="../../../static/menu_dashboard/js/vendors/zoom.js"></script>
+
+
+      <!-- Include other HTML content -->
+
+<script>
+$(document).ready(function() {
+    var cart = {}; // Initialize cart object
+
+    // Check if cart data is stored in local storage
+    if (localStorage.getItem('cart') !== null) {
+        cart = JSON.parse(localStorage.getItem('cart')); // Retrieve cart data from local storage
+        updateCart(cart); // Update cart content
+    }
+
+    // Add to Cart Button Click Event
+    $('.cart').click(function() {
+        var id = $(this).data('product-id'); // Get product ID
+        var name = $('#name-' + id).text(); // Get product name
+        var price = parseFloat($('#price-' + id).text().replace('$', '')); // Get product price
+        var imgSrc = $(this).closest('.card-body').find('img').attr('src'); // Get product image source
+        if (cart[id] !== undefined) {
+            cart[id][0]++; // Increment quantity if item already exists in cart
+        } else {
+            cart[id] = [1, name, price, imgSrc]; // Add new item to cart
+        }
+        updateCart(cart); // Update cart content
+    });
+
+    // Function to update cart content
+    function updateCart(cart) {
+        var totalItems = 0;
+        var subtotal = 0.00;
+        var cartItemsHtml = ''; // HTML for displaying cart items
+
+        if (Object.keys(cart).length === 0) {
+            // Clear the cart if it's empty
+            $('#cartItems').html('<li class="list-group-item">Your cart is empty.</li>');
+            $('#cartCount').text(totalItems).addClass('d-none'); // Hide cart count display
+            $('#cartTotal').text('$0.00'); // Update total price
+            localStorage.removeItem('cart'); // Remove cart data from local storage
+            return;
+        }
+
+        for (var item in cart) {
+            totalItems += cart[item][0]; // Update total quantity
+            subtotal += cart[item][0] * cart[item][2]; // Calculate subtotal
+            cartItemsHtml += `
+                <li class="list-group-item py-3 ps-0 border-top">
+                    <div class="row align-items-center">
+                        <div class="col-6 col-md-6 col-lg-7">
+                            <div class="d-flex">
+                                <img src="${cart[item][3]}" alt="${cart[item][1]}" class="icon-shape icon-xxl" />
+                                <div class="ms-3">
+                                    <a href="#!" class="text-inherit">
+                                        <h6 class="mb-0">${cart[item][1]}</h6>
+                                    </a>
+                                    <span><small class="text-muted">$${cart[item][2].toFixed(2)}</small></span>
+                                    <div class="mt-2 small lh-1">
+                                        <a href="#!" class="text-decoration-none text-inherit remove-item" data-product-id="${item}">
+                                            <span class="me-1 align-text-bottom">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 text-success">
+                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                </svg>
+                                            </span>
+                                            <span class="text-muted">Remove</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3 col-lg-3">
+                            <div class="input-group input-spinner">
+                                <input type="button" value="-" class="button-minus btn btn-sm" data-field="quantity" />
+                                <input type="number" step="1" max="10" value="${cart[item][0]}" name="quantity" class="quantity-field form-control-sm form-input" />
+                                <input type="button" value="+" class="button-plus btn btn-sm" data-field="quantity" />
+                            </div>
+                        </div>
+                        <div class="col-2 text-lg-end text-start text-md-end col-md-2">
+                            <span class="fw-bold">$${(cart[item][0] * cart[item][2]).toFixed(2)}</span>
+                        </div>
+                    </div>
+                </li>`;
+        }
+
+        $('#cartItems').html(cartItemsHtml); // Update cart items
+        $('#cartCount').text(totalItems).removeClass('d-none'); // Update cart count display
+        $('#cartTotal').text(`$${subtotal.toFixed(2)}`); // Update total price
+        localStorage.setItem('cart', JSON.stringify(cart)); // Update local storage
+    }
+
+    // Event listener for minus button click
+    $('.offcanvas-body').on('click', 'button.button-minus', function() {
+        var id = $(this).closest('.list-group-item').index(); // Get index of item in cart
+        var itemId = Object.keys(cart)[id]; // Get ID of item in cart
+        cart[itemId][0]--; // Decrement quantity
+        if (cart[itemId][0] === 0) {
+            delete cart[itemId]; // Remove item from cart if quantity is zero
+        }
+        updateCart(cart); // Update cart content
+    });
+
+    // Event listener for plus button click
+    $('.offcanvas-body').on('click', 'button.button-plus', function() {
+        var id = $(this).closest('.list-group-item').index(); // Get index of item in cart
+        var itemId = Object.keys(cart)[id]; // Get ID of item in cart
+        cart[itemId][0]++; // Increment quantity
+        updateCart(cart); // Update cart content
+    });
+
+    // Event listener for clear cart button click
+    $('#clearCartButton').click(function() {
+        cart = {}; // Clear the cart
+        updateCart(cart); // Update cart content
+    });
+
+    // Event listener for remove item click
+    $('.offcanvas-body').on('click', '.remove-item', function() {
+        var itemId = $(this).data('product-id'); // Get ID of item to remove
+        delete cart[itemId]; // Remove item from cart
+        updateCart(cart); // Update cart content
+    });
+});
+</script>
+
+<!-- Include other HTML content -->
+
+
+
+
+   </body>
+</html>
