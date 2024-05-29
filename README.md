@@ -1,6 +1,6 @@
 # Snap Menu
 
-Snap Menu is a web-based application that allows users to browse restaurant menus, add items to their shopping cart, and complete the checkout process. The system is built using Django for the backend and Bootstrap for the frontend.
+Snap Menu is a digital menu system that allows customers to access restaurant menus by scanning a QR code. The system is built using Django for the backend and Bootstrap for the frontend, providing a seamless and intuitive user experience.
 
 ## Table of Contents
 
@@ -15,11 +15,12 @@ Snap Menu is a web-based application that allows users to browse restaurant menu
 
 ## Features
 
+- QR code generation for accessing menus
 - User authentication
 - Menu browsing
 - Shopping cart functionality
 - Checkout process with order confirmation
-- Admin dashboard for managing orders
+- Admin dashboard for managing orders and menus
 
 ## Prerequisites
 
@@ -27,7 +28,6 @@ Before you begin, ensure you have met the following requirements:
 
 - Python 3.8+
 - Django 3.2+
-- Node.js and npm (for frontend dependencies)
 
 ## Installation
 
@@ -71,4 +71,6 @@ Follow these steps to get the project up and running on your local machine.
 
 ## Running the Project
 
-To run
+To start the project, use the following command:
+```sh
+python manage.py runserver
