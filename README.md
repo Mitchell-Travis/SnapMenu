@@ -1,6 +1,8 @@
 # Snap Menu
 
 ![Snap Menu Logo](menu_dashboard/static/menu_dashboard/images/Qroce_Table_1.png)
+
+
 ![Snap Menu Logo](menu_dashboard/static/menu_dashboard/images/Menu.jpg)
 
 
