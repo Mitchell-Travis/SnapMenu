@@ -1,6 +1,8 @@
 # Snap Menu
 
+![Snap Menu Logo](menu_dashboard/static/menu_dashboard/images/Qroce_Table_1.png)
 ![Snap Menu Logo](menu_dashboard/static/menu_dashboard/images/Menu.jpg)
+
 
 Snap Menu is a digital menu system that allows customers to access restaurant menus by scanning a QR code. The system is built using Django for the backend and Bootstrap for the frontend, providing a seamless and intuitive user experience.
 
