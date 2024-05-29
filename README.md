@@ -35,8 +35,8 @@ Follow these steps to get the project up and running on your local machine.
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/yourusername/snap-menu.git
-    cd snap-menu
+    git clone https://github.com/Mitchell-Travis/SnapMenu.git
+    cd snap_menu
     ```
 
 2. **Create a virtual environment:**
@@ -48,7 +48,6 @@ Follow these steps to get the project up and running on your local machine.
 3. **Install the dependencies:**
     ```sh
     pip install -r requirements.txt
-    npm install  # If your project includes frontend dependencies managed by npm
     ```
 
 4. **Apply migrations:**
