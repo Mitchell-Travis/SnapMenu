@@ -16,6 +16,8 @@ from PIL import Image
 from io import BytesIO
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Max
+import logging
 
 
 
@@ -95,41 +97,74 @@ def restaurant_category_menu(request):
 
 @login_required(login_url='customer_signin')
 def restaurant_checkout(request, restaurant_id):
+    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+    total_amount = 0  # Initialize total_amount with a default value
+
     if request.method == 'POST':
         try:
-            cart = request.POST.get('cart')
-            cart = json.loads(cart)  # Parse the JSON cart data
+            cart_data = request.POST.get('cart')
 
-            customer = request.user.customer  # Get the logged-in customer
+            # Ensure the cart data is not None
+            if not cart_data:
+                return JsonResponse({'message': 'Cart data is missing'}, status=400)
+
+            cart = json.loads(cart_data)  # Get cart data from POST request
+            payment_method = request.POST.get('payment_method')  # Get payment method from POST request
+
+            # Ensure the customer exists
+            try:
+                customer = request.user.customer  # Get the logged-in customer
+            except Customer.DoesNotExist:
+                # Create the Customer object if it doesn't exist
+                customer = Customer.objects.create(user=request.user)
+
+            # Fetch the table number from one of the tables associated with the restaurant
+            table = Table.objects.filter(restaurant=restaurant).first()
+            table_number = table.table_number if table else None
+
+            # Create a new order
+            order = Orders.objects.create(
+                customer=customer,
+                restaurant=restaurant,
+                status='Pending',
+                payment_method=payment_method,
+                table_number=table_number,
+                amount=0  # Initialize total_amount
+            )
+
+            order_products = []
 
             for product_id, item_data in cart.items():
+                product = get_object_or_404(Product, id=product_id)
                 quantity = item_data[0]
-                product = Product.objects.get(id=product_id)
-                restaurant = product.restaurant  # Assuming the Product model has a ForeignKey to Restaurant
 
-                for _ in range(quantity):
-                    Orders.objects.create(
-                        customer=customer,
-                        product=product,
-                        restaurant=restaurant,
-                        status='Pending'
-                    )
+                # Calculate the amount for the current product
+                amount = product.price * quantity
+                total_amount += amount  # Update the total amount
+
+                order_product = OrderProduct.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=quantity,
+                    price=product.price
+                )
+                order_products.append(order_product)
+
+            # Update the total amount in the order
+            order.amount = total_amount
+            order.save()
 
             # Return a JSON response indicating success
-            return JsonResponse({'message': 'Order placed successfully'})
+            return JsonResponse({'message': 'Orders placed successfully', 'total_amount': total_amount})
 
         except Exception as e:
             # Log the error
-            print(f"Error processing order: {e}")
+            print(f"Error processing orders: {e}")
             # Return an error response
-            return JsonResponse({'message': 'Error processing order. Please try again.'}, status=500)
+            return JsonResponse({'message': f"Error processing orders. Please try again. {str(e)}"}, status=500)
 
-    # Get the restaurant based on the restaurant ID
-    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
-    
-    # Render the checkout page
-    return render(request, 'menu_dashboard/shop-checkout.html', {'restaurant': restaurant})
-
+    # Pass the total amount to the template context even when the request method is not POST
+    return render(request, 'menu_dashboard/shop-checkout.html', {'restaurant': restaurant, 'total_amount': total_amount})
 
 
 @login_required(login_url='adminlogin')
@@ -144,7 +179,7 @@ def create_restaurant_menu(request):
         product_image = request.FILES.get('product_image')  # Use get() to handle missing image gracefully
         price = request.POST['price']
         description = request.POST['description']
-        category_id = request.POST['category']  # Retrieve the selected category ID
+        category = request.POST['category']  # Retrieve the selected category
 
         # Retrieve promo form fields
         has_promo = request.POST.get('has_promo') == 'on'  # Check if the checkbox is checked
@@ -160,16 +195,13 @@ def create_restaurant_menu(request):
             # Validate that price is a valid decimal number
             price_decimal = Decimal(price)
 
-            # Retrieve the selected category
-            category = Category.objects.get(id=category_id)
-
             # Create a new product
             product = Product(
                 name=name,
                 product_image=product_image,
                 price=price_decimal,
                 description=description,
-                category=category,  # Assign the selected category
+                category=category,  # Assign the selected category directly
                 pub_date=datetime.now(),
                 restaurant=request.user.restaurant,
                 has_promo=has_promo,
@@ -204,15 +236,8 @@ def create_restaurant_menu(request):
         except Exception as e:
             messages.error(request, f'An error occurred: {str(e)}')
 
-    # Get the logo image URL
-    logo_image_url = restaurant.logo_pic.url
-
-    # Fetch categories for populating the dropdown
-    categories = Category.objects.all()
-
     context = {
-        'categories': categories,
-        'logo_image_url ':logo_image_url
+        # Pass any additional context data needed
     }
 
     return render(request, 'menu_dashboard/add-product.html', context)

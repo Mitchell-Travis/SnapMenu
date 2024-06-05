@@ -9,6 +9,8 @@ from django.core.files.storage import FileSystemStorage  # Import FileSystemStor
 
 from accounts.models import User, VerifyConfirmation, ConfirmationCode
 from accounts.send_email_confirmation import EmailConfirmation
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -73,7 +75,10 @@ def customer_signup_view(request):
 
         # Add the user to the 'Customer' group
         customer_group, created = Group.objects.get_or_create(name='Customer')
-        customer_group.user_set.add(user)
+        user.groups.add(customer_group)
+
+        # Create a Customer instance and associate it with the user
+        customer = Customer.objects.create(user=user)
 
         # Authenticate the user with email and password
         user = authenticate(email=email, password=password)
@@ -88,6 +93,7 @@ def customer_signup_view(request):
     return render(request, 'accounts/customer_signup.html')
 
 
+
 def customer_signin_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -99,11 +105,36 @@ def customer_signin_view(request):
             if user.is_active:
                 login(request, user)
 
-
-                
                 # Check if the user is a member of the 'Customer' group
                 if user.groups.filter(name='Customer').exists():
-                    return redirect('restaurant_checkout')
+                    # Get the associated restaurant for the user
+                    try:
+                        # Ensure that the user has a customer profile
+                        customer = user.customer
+                        
+                        if customer:
+                            # Assuming there's a ForeignKey from Customer to Restaurant
+                            restaurant = customer.restaurant
+                            if restaurant:
+                                # Redirect to the restaurant checkout page
+                                return redirect('restaurant_checkout', restaurant_id=restaurant.id)
+                            else:
+                                # Handle case where customer is not associated with any restaurant
+                                messages.error(request, 'No restaurant associated with this customer')
+                                return redirect('home')  # Redirect to home page or another appropriate page
+                        else:
+                            # Handle case where user has no customer profile
+                            messages.error(request, 'Customer profile not found')
+                            return redirect('home')  # Redirect to home page or another appropriate page
+
+                    except AttributeError:
+                        # Handle case where user has no customer profile
+                        messages.error(request, 'Customer profile not found')
+                        return redirect('home')  # Redirect to home page or another appropriate page
+                    except Restaurant.DoesNotExist:
+                        # Handle case where associated restaurant does not exist
+                        messages.error(request, 'Associated restaurant does not exist')
+                        return redirect('home')  # Redirect to home page or another appropriate page
                 else:
                     # Handle other user types or roles here
                     return redirect('home')
@@ -119,6 +150,7 @@ def customer_signin_view(request):
                 messages.error(request, 'Password is required')
 
     return render(request, 'accounts/customer_signin.html')
+
 
 
 
@@ -155,6 +187,7 @@ def create_restaurant_profile(request):
 
 
 
+@login_required
 def create_customer_profile(request):
     if request.method == 'POST':
         # Retrieve form data from request.POST
@@ -171,26 +204,28 @@ def create_customer_profile(request):
             # If no profile picture is uploaded, set filename to None or provide a default image path
             filename = None  # Or provide the default image path here
 
-        # Create a new User instance and set its attributes
+        # Get the logged-in user
         user = request.user
 
-        # Set the first_name and last_name attributes separately
+        # Update the user's first and last name
         user.first_name = first_name
         user.last_name = last_name
         user.save()
 
-        # Create a Customer instance and set its attributes
-        customer = Customer.objects.create(
-            user=user,
-            mobile=mobile,
-            profile_pic=filename  # Set the profile picture filename
-        )
+        # Check if the customer profile already exists
+        customer, created = Customer.objects.get_or_create(user=user, defaults={'mobile': mobile, 'profile_pic': filename})
+
+        if not created:
+            # Update the existing customer profile
+            customer.mobile = mobile
+            if filename:
+                customer.profile_pic = filename
+            customer.save()
 
         # Redirect to a success page or perform any other action
-
         return redirect('customer_signin')
 
-    return render(request, 'accounts/create_customer_profile.html')
+    return render(request, 'accounts/customer_profile.html')
 
 
 def signin_view(request):

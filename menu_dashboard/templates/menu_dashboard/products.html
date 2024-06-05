@@ -117,8 +117,12 @@
                             </div>
                         </td>
                         <td>
-                            <a href="#!"><img src="{{ product.product_image.url }}" alt=""
-                                    class="icon-shape icon-md" /></a>
+                            {% if product.product_image %}
+                                <a href="#!"><img src="{{ product.product_image.url }}" alt="Product Image" class="icon-shape icon-md" /></a>
+                            {% else %}
+                                <!-- Display a placeholder image or alternative content -->
+                                <span>No Image Available</span>
+                            {% endif %}
                         </td>
                         <td><a href="#" class="text-reset">{{ product.name }}</a></td>
                         <td>{{ product.category }}</td>

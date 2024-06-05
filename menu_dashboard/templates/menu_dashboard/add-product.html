@@ -76,12 +76,7 @@
                         <!-- input -->
                         <div class="mb-3 col-lg-6">
                             <label class="form-label">Product Category</label>
-                            <select class="form-select" name="category">
-                                <option selected>Choose a Category</option>
-                                {% for category in categories %}
-                                    <option value="{{ category.id }}">{{ category.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <input type="text" class="form-control" name="category" placeholder="Enter Category Name">
                         </div>
                         <div>
                             <div class="mb-3 col-lg-12 mt-5">

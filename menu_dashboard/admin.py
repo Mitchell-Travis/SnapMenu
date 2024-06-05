@@ -15,11 +15,13 @@ from .models import (
     Orders,
     Feedback, 
     Table, 
-    Restaurant, 
+    Restaurant,
+    OrderProduct 
     )
 from django.utils.html import format_html
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
+from PIL import Image
 
 
 # Register your models here.
@@ -37,8 +39,37 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('customer_name', 'restaurant_name', 'ordered_products', 'order_date', 'status', 'payment_method', 'table_number', 'total_amount')
+    list_filter = ('status', 'payment_method')
+    search_fields = ('customer__user__first_name', 'customer__user__last_name', 'orderproduct__product__name', 'restaurant__restaurant_name')
+    readonly_fields = ('order_date', 'total_amount')
+
+    def customer_name(self, obj):
+        if obj.customer and obj.customer.user:
+            return f"{obj.customer.user.first_name} {obj.customer.user.last_name}"
+        return "No Customer"
+    customer_name.short_description = 'Customer Name'
+
+    def restaurant_name(self, obj):
+        if obj.restaurant:
+            return obj.restaurant.restaurant_name
+        return "No Restaurant"
+    restaurant_name.short_description = 'Restaurant Name'
+
+    def ordered_products(self, obj):
+        order_items = OrderProduct.objects.filter(order=obj)
+        product_list = ', '.join([f"{item.product.name} (x{item.quantity})" for item in order_items])
+        return product_list
+    ordered_products.short_description = 'Ordered Products'
+
+    def total_amount(self, obj):
+        order_items = OrderProduct.objects.filter(order=obj)
+        total = sum(item.quantity * item.price for item in order_items)
+        return total
+    total_amount.short_description = 'Total Amount'
+
 admin.site.register(Orders, OrderAdmin)
+
 
 class FeedbackAdmin(admin.ModelAdmin):
     pass
@@ -59,43 +90,56 @@ class TableAdmin(admin.ModelAdmin):
     view_qrcode.short_description = 'QR Code'
 
     def download_qr_codes(self, request, queryset):
-        # Create a ZIP file to store the QR code images
-        zip_buffer = BytesIO()
-        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        # Generate individual QR code images for download
+        for table in queryset:
             base_url = "http://172.20.10.11:8000/"  # Replace with your desired base URL
+            restaurant_name_slug = slugify(table.restaurant.restaurant_name)  # Slugify the name
+            table_qrcode_url = f'{base_url}/dashboard/{restaurant_name_slug}/{table.restaurant.id}'
 
-            for table in queryset:
-                if table.qrcode_image:
-                    base_url = "http://172.20.10.11:8000/"  # Replace with your desired base URL
-                    restaurant_name_slug = slugify(table.restaurant.restaurant_name)  # Slugify the name
-                    table_qrcode_url = f'{base_url}/dashboard/{restaurant_name_slug}/{table.restaurant.id}'
+            # Generate the QR code image
+            qr = qrcode.QRCode(
+                version=None,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=15,
+                border=4,
+            )
+            qr.add_data(table_qrcode_url)
+            qr.make(fit=True)
 
-                    # Generate the QR code image
-                    qr = qrcode.QRCode(
-                        version=None,
-                        error_correction=qrcode.constants.ERROR_CORRECT_L,
-                        box_size=15,
-                        border=4,
-                    )
-                    qr.add_data(table_qrcode_url)
-                    qr.make(fit=True)
+            qr_image = qr.make_image(fill_color="green", back_color="white").convert('RGBA')
 
-                    # Create an image with a white QR code on a green background
-                    qr_image = qr.make_image(fill_color="green", back_color="white")
+            # Load the restaurant logo picture
+            if table.restaurant.logo_pic:
+                restaurant_logo_image_path = table.restaurant.logo_pic.path
+                restaurant_logo_image = Image.open(restaurant_logo_image_path).convert('RGBA')
 
-                    # Save the image to a BytesIO buffer
-                    image_buffer = BytesIO()
-                    qr_image.save(image_buffer, format="PNG")
+                # Calculate size and position to overlay the logo picture
+                qr_width, qr_height = qr_image.size
+                logo_image_size = qr_width // 8
+                logo_image = restaurant_logo_image.resize((logo_image_size, logo_image_size))
 
-                    # Add the image to the ZIP file
-                    image_filename = f"table_{table.table_number}.png"
-                    zipf.writestr(image_filename, image_buffer.getvalue())
+                # Create a transparent image for pasting
+                transparent = Image.new('RGBA', (qr_width, qr_height))
+                transparent.paste(qr_image, (0, 0))
 
-        # Build the response to send the ZIP file for download
-        zip_buffer.seek(0)
-        response = HttpResponse(zip_buffer, content_type='application/zip')
-        response['Content-Disposition'] = f'attachment; filename=table_qr_codes.zip'
-        return response
+                # Calculate the position for the logo
+                logo_position = (
+                    (qr_width - logo_image_size) // 2,
+                    (qr_height - logo_image_size) // 2,
+                )
+
+                # Paste the logo onto the transparent image
+                transparent.paste(logo_image, logo_position, logo_image)
+                qr_image = transparent
+
+            # Save the image to a BytesIO buffer
+            image_buffer = BytesIO()
+            qr_image.save(image_buffer, format="PNG")
+
+            # Build the response to send the QR code image for download
+            response = HttpResponse(image_buffer.getvalue(), content_type='image/png')
+            response['Content-Disposition'] = f'attachment; filename=table_{table.table_number}_qrcode.png'
+            return response
 
     download_qr_codes.short_description = 'Download QR Codes for Selected Tables'
 

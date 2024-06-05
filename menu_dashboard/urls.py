@@ -15,7 +15,7 @@ urlpatterns = [
 	path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
 	path('contact/', views.contact, name='contact'),
 	path('category_menu/', views.restaurant_category_menu, name='category-menu'),
-	path('food-monia/<int:restaurant_id>/checkout/', views.restaurant_checkout, name='restaurant_checkout'),
+	path('<int:restaurant_id>/checkout/', views.restaurant_checkout, name='restaurant_checkout'),
 ]
 
 
