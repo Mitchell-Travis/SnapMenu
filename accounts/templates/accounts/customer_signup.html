@@ -1,251 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Required Meta Tags Always Come First -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Title -->
-  <title>Basic Sign Up</title>
-
-  <!-- Favicon icon-->
-<link rel="shortcut icon" type="image/x-icon" href="../../static/menu_dashboard/images/favicon/favicon.ico">
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- CSS Implementing Plugins -->
-  <link rel="stylesheet" href="../../static/vendor/bootstrap-icons/font/bootstrap-icons.css">
-
-  <!-- CSS Front Template -->
-
-  <link rel="preload" href="../../static/css/theme.min.css" data-hs-appearance="default" as="style">
-  <link rel="preload" href="../../static/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
-
-  <style data-hs-appearance-onload-styles>
-    *
-    {
-      transition: unset !important;
-    }
-
-    body
-    {
-      opacity: 0;
-    }
-  </style>
-
-  <script>
-            window.hs_config = {"autopath":"@@autopath","deleteLine":"hs-builder:delete","deleteLine:build":"hs-builder:build-delete","deleteLine:dist":"hs-builder:dist-delete","previewMode":false,"startPath":"/index.html","vars":{"themeFont":"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap","version":"?v=1.0"},"layoutBuilder":{"extend":{"switcherSupport":true},"header":{"layoutMode":"default","containerMode":"container-fluid"},"sidebarLayout":"default"},"themeAppearance":{"layoutSkin":"default","sidebarSkin":"default","styles":{"colors":{"primary":"#377dff","transparent":"transparent","white":"#fff","dark":"132144","gray":{"100":"#f9fafc","900":"#1e2022"}},"font":"Inter"}},"languageDirection":{"lang":"en"},"skipFilesFromBundle":{"dist":["assets/js/hs.theme-appearance.js","assets/js/hs.theme-appearance-charts.js","assets/js/demo.js"],"build":["assets/css/theme.css","assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js","assets/js/demo.js","assets/css/theme-dark.css","assets/css/docs.css","assets/vendor/icon-set/style.css","assets/js/hs.theme-appearance.js","assets/js/hs.theme-appearance-charts.js","node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js","assets/js/demo.js"]},"minifyCSSFiles":["assets/css/theme.css","assets/css/theme-dark.css"],"copyDependencies":{"dist":{"*assets/js/theme-custom.js":""},"build":{"*assets/js/theme-custom.js":"","node_modules/bootstrap-icons/font/*fonts/**":"assets/css"}},"buildFolder":"","replacePathsToCDN":{},"directoryNames":{"src":"../../src","dist":"../../dist","build":"../../build"},"fileNames":{"dist":{"js":"theme.min.js","css":"theme.min.css"},"build":{"css":"theme.min.css","js":"theme.min.js","vendorCSS":"vendor.min.css","vendorJS":"vendor.min.js"}},"fileTypes":"jpg|png|svg|mp4|webm|ogv|json"}
-            window.hs_config.gulpRGBA = (p1) => {
-  const options = p1.split(',')
-  const hex = options[0].toString()
-  const transparent = options[1].toString()
-
-  var c;
-  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-    c= hex.substring(1).split('');
-    if(c.length== 3){
-      c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-    }
-    c= '0x'+c.join('');
-    return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',' + transparent + ')';
-  }
-  throw new Error('Bad Hex');
-}
-            window.hs_config.gulpDarken = (p1) => {
-  const options = p1.split(',')
-
-  let col = options[0].toString()
-  let amt = -parseInt(options[1])
-  var usePound = false
-
-  if (col[0] == "#") {
-    col = col.slice(1)
-    usePound = true
-  }
-  var num = parseInt(col, 16)
-  var r = (num >> 16) + amt
-  if (r > 255) {
-    r = 255
-  } else if (r < 0) {
-    r = 0
-  }
-  var b = ((num >> 8) & 0x00FF) + amt
-  if (b > 255) {
-    b = 255
-  } else if (b < 0) {
-    b = 0
-  }
-  var g = (num & 0x0000FF) + amt
-  if (g > 255) {
-    g = 255
-  } else if (g < 0) {
-    g = 0
-  }
-  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
-}
-            window.hs_config.gulpLighten = (p1) => {
-  const options = p1.split(',')
-
-  let col = options[0].toString()
-  let amt = parseInt(options[1])
-  var usePound = false
-
-  if (col[0] == "#") {
-    col = col.slice(1)
-    usePound = true
-  }
-  var num = parseInt(col, 16)
-  var r = (num >> 16) + amt
-  if (r > 255) {
-    r = 255
-  } else if (r < 0) {
-    r = 0
-  }
-  var b = ((num >> 8) & 0x00FF) + amt
-  if (b > 255) {
-    b = 255
-  } else if (b < 0) {
-    b = 0
-  }
-  var g = (num & 0x0000FF) + amt
-  if (g > 255) {
-    g = 255
-  } else if (g < 0) {
-    g = 0
-  }
-  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
-}
-            </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delvrr - Sign Up</title>
+    <style>
+        :root {
+            --primary-color: #28a745;
+            --primary-dark: #218838;
+            --background-color: #f8f9fa;
+            --text-color: #333333;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            height: 100%;
+            background-color: var(--background-color);
+        }
+        .container {
+            display: flex;
+            height: 100%;
+        }
+        .signup-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: white;
+        }
+        .menu-panel {
+            flex: 1;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../../../static/img/pngtree-a-restaurant-showing-a-few-dishes-image_13029601.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-style: italic;
+        }
+        .form-container {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-sizing: border-box;
+        }
+        .input-group {
+            width: 100%;
+            position: relative;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .input-group .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-sizing: border-box;
+        }
+        .btn-signup {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-signup:hover {
+            background-color: var(--primary-dark);
+        }
+        .btn-create {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+        .btn-create:hover {
+            background-color: #f0f0f0;
+        }
+        .form-check {
+            text-align: left;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-check input {
+            margin-right: 0.5rem;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        .menu-panel h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .menu-panel p {
+            font-size: 1.2rem;
+            max-width: 80%;
+        }
+        .text-primary-green {
+            color: #0aad0a;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .menu-panel {
+                display: none;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <div class="signup-panel">
+            <div class="logo">Delvrr</div>
+            <div class="tagline">"Your seamless dining journey starts here."</div>
+            <div class="form-container">
+                <form method="POST" action="{% url 'customer_signup' %}" enctype="multipart/form-data" class="signup-form" onsubmit="return validateForm()" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="restaurant_id" value="{{ restaurant_id }}">
+                    <input type="hidden" name="restaurant_slug" value="{{ restaurant_slug }}">
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" id="username" placeholder="Username" required>
+                        <div class="error-message" id="usernameError"></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" placeholder="Markwilliams@site.com" required>
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" placeholder="8+ characters required" required minlength="8">
+                        <i class="toggle-password" onclick="togglePasswordVisibility()">👁</i>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+                    <div class="form-check" style="margin-bottom: 1.5rem;">
+                        <input type="checkbox" id="termsCheckbox" required>
+                        <label for="termsCheckbox" class="text-primary-green"><span style="color: black;">I accept the </span> <a href="#" class="text-primary-green">Terms and Conditions</a></label>
+                        <div class="error-message" id="termsError"></div>
+                    </div>
 
-  <script src="../../static/js/hs.theme-appearance.js"></script>
-
-  <!-- ========== MAIN CONTENT ========== -->
-  <main id="content" role="main" class="main">
-    <div class="position-fixed top-0 end-0 start-0 bg-img-start">
-      <!-- Shape -->
-      <div class="shape shape-bottom zi-1">
-        <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
-          <polygon fill="#fff" points="0,273 1921,273 1921,0 " />
-        </svg>
-      </div>
-      <!-- End Shape -->
-    </div>
-
-    <!-- Content -->
-    <div class="container py-5 py-sm-7">
-      <a class="d-flex justify-content-center mb-5" href="{% url 'home' %}">
-        <img class="zi-2"  style="width: 8rem;">
-      </a>
-
-      <div class="mx-auto" style="max-width: 30rem;">
-        <!-- Card -->
-        <div class="card card-lg mb-5">
-          <div class="card-body">
-      <!-- Form -->
-      <form method="POST" action="" enctype="multipart/form-data" class="js-validate needs-validation" novalidate>
-          {% csrf_token %}
-          <div class="text-center">
-              <div class="mb-5">
-                  <h1 class="display-5">Create your account</h1>
-                  <p>Already have an account? <a class="link" href="{% url 'customer_signin' %}">Sign in here</a></p>
-              </div>
-    </div>
-
-    <!-- Form -->
-    <div class="mb-4">
-        <label class="form-label" for="username">Username</label>
-        <input type="text" class="form-control form-control-lg" name="username" id="username" placeholder="Username:" required>
-        <span class="invalid-feedback">Please enter a valid username.</span>
-    </div>
-    <!-- End Form -->
-
-    <!-- Form -->
-    <div class="mb-4">
-        <label class="form-label" for="signupSrEmail">Your email</label>
-        <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail" placeholder="Markwilliams@site.com" aria-label="Markwilliams@site.com" required>
-        <span class="invalid-feedback">Please enter a valid email address.</span>
-    </div>
-    <!-- End Form -->
-
-
-    <!-- Form -->
-    <div class="mb-4">
-        <label class="form-label" for="password">Password</label>
-        <div class="input-group input-group-merge" data-hs-validation-validate-class>
-            <input type="password" class="js-toggle-password form-control form-control-lg" name="password" id="password" placeholder="8+ characters required" aria-label="8+ characters required" required minlength="8" data-hs-toggle-password-options='{
-                "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
-                "defaultClass": "bi-eye-slash",
-                "showClass": "bi-eye",
-                "classChangeTarget": ".js-toggle-password-show-icon-1"
-            }'>
-            <a class="js-toggle-password-target-1 input-group-append input-group-text" href="javascript:;">
-                <i class="js-toggle-password-show-icon-1 bi-eye"></i>
-            </a>
+                    <button type="submit" class="btn btn-signup">Create an account</button>
+                </form>
+                <div class="forgot-password">
+                    <p>Already have an account? <a href="{% url 'customer_signin' %}?next={{ next }}">Sign in here</a>.</p>
+                </div>
+            </div>
         </div>
-        <span class="invalid-feedback">Your password is invalid. Please try again.</span>
-    </div>
-    <!-- End Form -->
-
-    <!-- Form Check -->
-    <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" value="" id="termsCheckbox" required>
-        <label class="form-check-label" for="termsCheckbox">
-            I accept the <a href="#">Terms and Conditions</a>
-        </label>
-        <span class="invalid-feedback">Please accept our Terms and Conditions.</span>
-    </div>
-    <!-- End Form Check -->
-
-    <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-success btn-lg" style="background-color: #0aad0a;">Create an account</button>
-    </div>
-</form>
-<!-- End Form -->
-
-          </div>
+        <div class="menu-panel">
+            <h2>Digital Menu Experience</h2>
+            <p>Explore our diverse menu, customize your orders, and enjoy a seamless dining experience with Delvrr.</p>
         </div>
-        <!-- End Card -->
-
-        
-      </div>
     </div>
-    <!-- End Content -->
-  </main>
-  <!-- ========== END MAIN CONTENT ========== -->
 
-  <!-- JS Global Compulsory  -->
-  <script src="../../static/vendor/jquery/dist/jquery.min.js"></script>
-  <script src="../../static/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
-  <script src="../../static/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
 
-  <!-- JS Implementing Plugins -->
-  <script src="../../static/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
+        function validateForm() {
+            let isValid = true;
 
-  <!-- JS Front -->
-  <script src="../../static/js/theme.min.js"></script>
+            // Validate username
+            const username = document.getElementById("username").value;
+            const usernameError = document.getElementById("usernameError");
+            if (username.trim() === "") {
+                usernameError.textContent = "Username is required.";
+                isValid = false;
+            } else {
+                usernameError.textContent = "";
+            }
 
-  <!-- JS Plugins Init. -->
-  <script>
-    (function() {
-      window.onload = function () {
-        // INITIALIZATION OF BOOTSTRAP VALIDATION
-        // =======================================================
-        HSBsValidation.init('.js-validate', {
-          onSubmit: data => {
-            // data.event.preventDefault()
-            // alert('Submited')
-          }
-        })
+            // Validate email
+            const email = document.getElementById("email").value;
+            const emailError = document.getElementById("emailError");
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                emailError.textContent = "Please enter a valid email address.";
+                isValid = false;
+            } else {
+                emailError.textContent = "";
+            }
 
+            // Validate password
+            const password = document.getElementById("password").value;
+            const passwordError = document.getElementById("passwordError");
+            if (password.length < 8) {
+                passwordError.textContent = "Password must be at least 8 characters.";
+                isValid = false;
+            } else {
+                passwordError.textContent = "";
+            }
 
-        // INITIALIZATION OF TOGGLE PASSWORD
-        // =======================================================
-        new HSTogglePassword('.js-toggle-password')
-      }
-    })()
-  </script>
+            // Validate terms and conditions
+            const termsCheckbox = document.getElementById("termsCheckbox");
+            const termsError = document.getElementById("termsError");
+            if (!termsCheckbox.checked) {
+                termsError.textContent = "You must accept the Terms and Conditions.";
+                isValid = false;
+            } else {
+                termsError.textContent = "";
+            }
+
+            return isValid;
+        }
+    </script>
 </body>
 </html>

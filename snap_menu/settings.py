@@ -13,10 +13,7 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -27,20 +24,15 @@ SECRET_KEY = 'django-insecure--imqw09akhzp4l9k(-qvmxs2wi&#9@w@s)%kafewhcut)bsf*j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '172.20.10.11', '127.0.0.1', '0.0.0.0']
-# Application definition
-# '127.0.0.1', '0.0.0.0'
-
-related_name='+'
+ALLOWED_HOSTS = ['localhost', '172.20.10.11', '127.0.0.1', '[::1]', '0.0.0.0']
 
 AUTH_USER_MODEL = 'accounts.User'
 
 # Backend for case insensitivity
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.AllowAllUsersModelBackend',
-    'accounts.backends.CaseInsensitiveModelBackend'
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+    'accounts.backends.CaseInsensitiveModelBackend',  # Custom backend
 )
-
 
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
@@ -51,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
-    'menu_dashboard',
+    'menu_dashboard'
 ]
 
 MIDDLEWARE = [
@@ -67,11 +59,10 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'snap_menu.urls'
 
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,12 +71,13 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'custom_filters': 'menu_dashboard.templatetags.custom_filters',
+            },
         },
     },
 ]
-
 WSGI_APPLICATION = 'snap_menu.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -115,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -127,8 +118,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-
 # Email Backends
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True  # Use TLS (secure) connection
@@ -139,6 +128,16 @@ EMAIL_HOST_PASSWORD = 'jqlluijyefpdiuuv'
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = 'Snap Menu <no-reply@snapmenu.localhost>'
 
+# Twilio Account SID and Auth Token
+TWILIO_ACCOUNT_SID = 'AC75696aa087c2f10928305468b49577a3'
+TWILIO_AUTH_TOKEN = '99700192bad834e617bdc99829c620a7'
+
+# Twilio Phone Number (must be in E.164 format, e.g., +1234567890)
+TWILIO_PHONE_NUMBER = '+231881163840'
+TWILIO_VERIFY_SERVICE_SID = 'VAc77ee3724b5db8f8ca8caeaadf94a6ee'
+ACCOUNT_SID='YOUR ACCOUNT SID'
+AUTH_TOKEN='YOUR AUTH TOKEN'
+COUNTRY_CODE='+231'
 
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
@@ -151,14 +150,15 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+ 
+
+LOGIN_REDIRECT_URL = '/afterlogin' # Page where users are redirected after login
+LOGIN_URL = '/customer_signin'  # Page where users are redirected to log in
 
 
-LOGIN_REDIRECT_URL='/afterlogin'
-LOGIN_REDIRECT_URL='/customer_signin'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

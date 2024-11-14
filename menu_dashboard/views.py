@@ -18,8 +18,62 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Max
 import logging
+from weasyprint import HTML
+from django.template.loader import render_to_string
+from django.utils import timezone
+import logging
+# from django.db.models import Func, F
+# from django.db.models.functions import Radians, Power, Sin, Cos, Sqrt, ATan2, Pi
+# from django.contrib.gis.db.models.functions import Distance
+# from django.contrib.gis.geos import Point
 
 
+
+@login_required(login_url='vendor_login')
+def vendor_topup(request):
+    if request.method == 'POST':
+        user_code = request.POST.get('user_code')
+        amount = request.POST.get('amount')
+
+        try:
+            # Convert amount to Decimal
+            amount = Decimal(amount)
+            
+            user_code_obj = UserCode.objects.get(code=user_code)
+            user = user_code_obj.user
+            wallet, created = Wallet.objects.get_or_create(user=user)
+
+            topup_request = TopUpRequest.objects.create(
+                user_code=user_code_obj,
+                amount=amount  # Use Decimal amount
+            )
+            wallet.balance += amount  # Use Decimal amount
+            wallet.save()
+            topup_request.processed = True
+            topup_request.save()
+
+            return JsonResponse({'message': 'Top-up successful', 'new_balance': wallet.balance})
+        except UserCode.DoesNotExist:
+            return JsonResponse({'message': 'Invalid user code'}, status=400)
+        except Exception as e:
+            return JsonResponse({'message': f'Error: {str(e)}'}, status=500)
+
+    return render(request, 'menu_dashboard/vendor_topup.html')
+
+
+@login_required
+def view_wallet(request):
+    user = request.user
+    wallet, created = Wallet.objects.get_or_create(user=user)
+    topup_requests = TopUpRequest.objects.filter(user_code__user=user).order_by('-timestamp')
+    
+    print(f"Wallet Balance: {wallet.balance}")  # Debug print
+    print(f"Top-up Requests: {topup_requests}")  # Debug print
+
+    return render(request, 'menu_dashboard/view_wallet.html', {
+        'wallet': wallet,
+        'topup_requests': topup_requests
+    })
 
 def delete_product(request, product_id):
     try:
@@ -50,7 +104,6 @@ def restaurant_menu_list(request):
     return render(request, 'menu_dashboard/products.html', context)
 
 
-
 def contact(request):
 
     context = {
@@ -61,110 +114,210 @@ def contact(request):
 
 
 def restaurant_menu(request, restaurant_id, restaurant_name_slug):
-    # Get the specific restaurant using the provided restaurant_id
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
 
-    # Fetch all products associated with the restaurant, grouped by category
     products = Product.objects.filter(restaurant=restaurant)
-    categories = set(products.values_list('category', flat=True))
-    
+
     allProds = []
+    beverages = []
+
+    categories = set(products.values_list('category', flat=True))
     for category in categories:
-        prod = products.filter(category=category)[:6]  # Limit to 6 products per category
-        if prod:
-            allProds.append(prod)
+        if category == 'Drinks':
+            beverages = products.filter(category=category)
+        else:
+            prod = products.filter(category=category)[:6]
+            if prod:
+                allProds.append(prod)
 
     context = {
         'restaurant': restaurant,
         'allProds': allProds,
+        'beverages': beverages,
     }
 
     return render(request, 'menu_dashboard/index.html', context)
 
 
 
-def restaurant_category_menu(request):
 
+logger = logging.getLogger(__name__)
+
+@login_required(login_url='customer_signin')
+def order_success(request, order_id):
+    # Fetch the order
+    order = get_object_or_404(Orders, id=order_id)
+
+    # Ensure the user is authorized to view this order
+    if request.user.customer != order.customer:
+        return HttpResponseForbidden("You are not authorized to view this order.")
+
+    # Fetch the restaurant
+    restaurant = get_object_or_404(Restaurant, id=order.restaurant.id)
+    restaurant_slug = restaurant.slug  # Make sure this field exists and is not empty
+
+     # Clear the cart
+    if 'cart' in request.session:
+        del request.session['cart']
+
+    # Prepare context
     context = {
-
-
+        'restaurant_name_slug': restaurant_slug,  # Pass the slug to the template
+        'restaurant_id': restaurant.id,           # Pass the restaurant ID to the template
+        'restaurant_name': restaurant.restaurant_name,  # For display
+        'order_id': order.id,
+        'order_time': order.order_date,
+        'payment_method': order.payment_method,
+        'customer_name': f"{order.customer.user.first_name} {order.customer.user.last_name}",
+        'table_number': order.table_number,
+        'amount': order.amount,
     }
 
+    return render(request, 'menu_dashboard/order_success.html', context)
 
-    return render(request, 'menu_dashboard/index-2.html', context)
 
 
 
 @login_required(login_url='customer_signin')
+def download_receipt(request, order_id):
+    try:
+        order = get_object_or_404(Orders, id=order_id)
+
+        # Check authorization
+        if request.user.customer != order.customer:
+            logger.warning(f"Unauthorized receipt access attempt for order {order_id} by user {request.user.id}")
+            return render(request, 'menu_dashboard/unauthorized.html', status=403)
+
+        # Prepare context
+        context = {
+            'order': order,
+            'customer_name': f"{order.customer.user.get_full_name()}",
+            'order_time': order.order_date,
+            'generated_at': timezone.now()
+        }
+
+        # Generate PDF
+        html_string = render_to_string('menu_dashboard/receipt_template.html', context)
+        html = HTML(string=html_string, base_url=request.build_absolute_uri('/'))
+        pdf = html.write_pdf()
+
+        # Prepare response
+        filename = f"receipt_{order.id}_{timezone.now().strftime('%Y%m%d')}.pdf"
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        logger.info(f"Receipt generated for order {order_id}")
+        return response
+
+    except Exception as e:
+        logger.error(f"Error generating receipt for order {order_id}: {str(e)}")
+        return render(request, 'menu_dashboard/error.html', {'error': 'Failed to generate receipt'}, status=500)
+
+    
+
+def restaurant_search(request):
+    query = request.GET.get('q')
+    if query:
+        restaurants = Restaurant.objects.filter(restaurant_name__icontains=query)
+    else:
+        restaurants = Restaurant.objects.all()
+
+    context = {
+        'restaurants': restaurants,
+        'query': query,
+    }
+
+    return render(request, 'menu_dashboard/store-list.html', context)
+
+
+
+
+def restaurant_list(request):
+    # Fetch all restaurants from the database
+    restaurants = Restaurant.objects.all()
+
+    context = {
+        'restaurants': restaurants,
+    }
+
+    return render(request, 'menu_dashboard/store-list.html', context)
+
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+@login_required(login_url='customer_signin')
 def restaurant_checkout(request, restaurant_id):
     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
-    total_amount = 0  # Initialize total_amount with a default value
 
     if request.method == 'POST':
         try:
             cart_data = request.POST.get('cart')
 
-            # Ensure the cart data is not None
             if not cart_data:
                 return JsonResponse({'message': 'Cart data is missing'}, status=400)
 
-            cart = json.loads(cart_data)  # Get cart data from POST request
-            payment_method = request.POST.get('payment_method')  # Get payment method from POST request
+            cart = json.loads(cart_data)
+            payment_method = request.POST.get('payment_method')
 
             # Ensure the customer exists
-            try:
-                customer = request.user.customer  # Get the logged-in customer
-            except Customer.DoesNotExist:
-                # Create the Customer object if it doesn't exist
-                customer = Customer.objects.create(user=request.user)
+            customer, created = Customer.objects.get_or_create(user=request.user)
 
-            # Fetch the table number from one of the tables associated with the restaurant
+            # Fetch the first available table, if any
             table = Table.objects.filter(restaurant=restaurant).first()
             table_number = table.table_number if table else None
 
-            # Create a new order
+            # Create the order
             order = Orders.objects.create(
                 customer=customer,
                 restaurant=restaurant,
                 status='Pending',
                 payment_method=payment_method,
                 table_number=table_number,
-                amount=0  # Initialize total_amount
+                amount=0
             )
 
-            order_products = []
+            total_amount = Decimal('0.00')
+            service_charge = Decimal('0.51')
 
+            # Process each item in the cart
             for product_id, item_data in cart.items():
                 product = get_object_or_404(Product, id=product_id)
                 quantity = item_data[0]
-
-                # Calculate the amount for the current product
                 amount = product.price * quantity
-                total_amount += amount  # Update the total amount
+                total_amount += amount
 
-                order_product = OrderProduct.objects.create(
+                OrderProduct.objects.create(
                     order=order,
                     product=product,
                     quantity=quantity,
                     price=product.price
                 )
-                order_products.append(order_product)
 
-            # Update the total amount in the order
+            total_amount += service_charge
             order.amount = total_amount
             order.save()
 
-            # Return a JSON response indicating success
-            return JsonResponse({'message': 'Orders placed successfully', 'total_amount': total_amount})
+            # Record earnings
+            Earnings.objects.create(order=order, service_charge=service_charge)
+
+            # Log the order creation
+            logger.info(f"Order placed successfully: Order ID {order.id}")
+
+            # Optionally clear the cart here
+            request.session.pop('cart', None)
+
+            return JsonResponse({'message': 'Order placed successfully', 'order_id': order.id, 'total_amount': str(total_amount)})
 
         except Exception as e:
-            # Log the error
-            print(f"Error processing orders: {e}")
-            # Return an error response
-            return JsonResponse({'message': f"Error processing orders. Please try again. {str(e)}"}, status=500)
+            logger.error(f"Error processing order: {e}")
+            return JsonResponse({'message': f"Error processing order. Please try again. {str(e)}"}, status=500)
 
-    # Pass the total amount to the template context even when the request method is not POST
-    return render(request, 'menu_dashboard/shop-checkout.html', {'restaurant': restaurant, 'total_amount': total_amount})
+    return render(request, 'menu_dashboard/checkout.html', {'restaurant': restaurant, 'restaurant_id': restaurant_id})
+
+
+
 
 
 @login_required(login_url='adminlogin')

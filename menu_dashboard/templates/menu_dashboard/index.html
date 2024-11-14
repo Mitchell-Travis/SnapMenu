@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
    <head>
@@ -5,7 +6,7 @@
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       <meta content="Codescandy" name="author" />
-      <title>SnapMenu</title>
+      <title>Delvrr</title>
 
       <link href="../../../static/menu_dashboard/libs/slick-carousel/slick/slick.css" rel="stylesheet" />
       <link href="../../../static/menu_dashboard/libs/slick-carousel/slick/slick-theme.css" rel="stylesheet" />
@@ -19,332 +20,540 @@
       <link href="../../../static/menu_dashboard/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
       <link href="../../../static/menu_dashboard/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+      <link rel="stylesheet" href="../../../static/menu_dashboard/css/style.css"/>
 
 
       <!-- Theme CSS -->
       <link rel="stylesheet" href="../../../static/menu_dashboard/css/theme.min.css" />
+      <!-- <link rel="stylesheet" href="../../static/css/style.css"/> -->
+
+
+      <link rel="stylesheet" href="{% static 'menu_dashboard/css/style.css' %}">
+
 
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <style>
+    <link rel="stylesheet" href="{% static 'menu_dashboard/css/style.css' %}">
+      <style>
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%2888, 88, 88, 0.7%29' stroke-width='2' linecap='round' linejoin='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+    </style>
 
-   </head>
-   <style>
-      
-   .category-icons {
-     position: sticky;
-     top: 0; /* Adjust top value as needed for spacing */
-     left: 0;  /* Optional: Fix icons horizontally if needed */
-     background-color: white;  /* Optional: Set background color */
-     z-index: 10;  /* Ensure icons stay above other elements */
-     padding: 10px;  /* Optional: Add some padding for aesthetics */
-   }
+    <style type="text/css">
+    
+.modal-content {
+    border-radius: 0;
+    border: none;
+    background-image: url('../../../static/menu_dashboard/images/'); /* Add your background image here */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
 
-   .menu-item {
-     /* Style the menu item layout here (margins, borders, etc.) */
-   }
+.modal-overlay {
+    background: rgba(255, 255, 255, 255); /* Adjust the overlay color and opacity */
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    z-index: 2;
+}
 
-   @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-   }
+.btn-outline-secondary {
+    border-radius: 20px;
+}
 
-   .shake {
-      animation: shake 0.5s;
-   }
+.btn-primary {
+    border-radius: 10px;
+}
 
 
-   .card-product {
-      /* Your existing styles */
-      position: relative; /* Ensure the position is set to relative */
-   }
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
 
-   @keyframes shadow-cycle {
-      0% {
-         box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2); /* Initial shadow */
-      }
-      50% {
-         box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.3); /* Medium shadow */
-      }
-      100% {
-         box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2); /* Back to initial shadow */
-      }
-   }
+/* Ensure the modal content is centered */
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
 
-   .card-product.shadow-animate {
-      animation: shadow-cycle 3s ease-in-out infinite; /* Apply animation to shadow-animate class */
-   }
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.8); /* Darken the backdrop for better readability */
+}
 
-   
-   
-   </style>
 
+
+/* Adjust font sizes and colors as needed */
+
+</style>
+
+
+<style>
+  .app-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .app-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .btn-track {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .month-divider {
+    margin: 24px 0 16px;
+    position: relative;
+  }
+
+  .month-label {
+    background-color: #f0f0f0;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .order-card {
+    background-color: white;
+    border-radius: 7px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .order-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 16px;
+  }
+
+  .order-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .order-content {
+    flex-grow: 1;
+  }
+
+  .order-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .order-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+
+  .order-status {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  .order-status.pending {
+    background-color: #fff0c3;
+    color: #ffa000;
+  }
+
+  .order-status.delivered {
+    background-color: #e8f5e9;
+    color: #4caf50;
+  }
+
+  .btn-reorder {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .btn-reorder:hover {
+    background-color: #f0f0f0;
+  }
+</style>
+</head>
    <body>
 
-      <!-- navigation -->
-      <header>
-         
-         <div class="container">
-            <div class="row align-items-center pt-2">
-               <div class="col-xl-3 col-lg-8 col-7 d-flex">
-                  <div class="dropdown selectBox">
-                    
-                  </div>
-                 
+     <!-- Navbar -->
+    <nav class="navbar navbar-expand-md position-md-absolute w-100 border-top border-4 border-primary">
+        <div class="container px-0">
+            <!-- Navbar brand (logo) -->
+            <a class="navbar-brand" href="../index.html">
+                <img src="../../../static/menu_dashboard/images/logo/snapmenu.svg" alt="SnapMenu Logo" />
+            </a>
 
-            </div>
+            <!-- Search Button -->
+            <button class="btn btn-outline-primary ms-auto me-2" type="button" data-bs-toggle="modal"
+                data-bs-target="#searchModal">
+                <i class="fas fa-search"></i>
+            </button>
 
-               <div class="col-xxl-4 col-xl-5 col-lg-3 d-none d-lg-block">
-                  <div class="d-flex align-items-center justify-content-between ms-4">
-                     <div class="text-center">
-                        <div class="dropdown">
-                           <a href="#" class="text-reset" data-bs-toggle="dropdown" aria-expanded="false">
-                              <div class="lh-1">
-                                 <div class="position-relative d-inline-block mb-2">
-                                    <i class="bi bi-bell fs-4"></i>
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                       1
-                                       <span class="visually-hidden">unread messages</span>
-                                    </span>
-                                 </div>
-                                 <p class="mb-0 d-none d-xl-block small">Notification</p>
-                              </div>
-                           </a>
+            <!-- Button for toggling the navbar on mobile devices -->
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <!-- <span class="navbar-toggler-icon"></span> -->
+            </button>
 
-                           <div class="dropdown-menu dropdown-menu-lg p-0">
-                              <div>
-                                 <h6 class="px-4 border-bottom py-3 mb-0">Notification</h6>
-                                 <p class="mb-0 px-4 py-3">
-                                    <a href="#">Sign in</a>
-                                    or
-                                    <a href="#">register</a>
-                                    in or so you don t have to enter your details every time
-                                 </p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="ms-6 text-center">
-                        <a href="#" class="text-reset" data-bs-toggle="modal" data-bs-target="#userModal">
-                           <div class="lh-1">
-                              <div class="mb-2">
-                                 <i class="bi bi-person-circle fs-4"></i>
-                              </div>
-                              <p class="mb-0 d-none d-xl-block small">Sign up</p>
-                           </div>
-                        </a>
-                     </div>
-                     <div class="ms-6 text-center">
-                        <a href="../pages/account-orders.html" class="text-reset">
-                           <div class="lh-1">
-                              <div class="mb-2">
-                                 <i class="bi bi-archive fs-4"></i>
-                              </div>
-                              <p class="mb-0 d-none d-xl-block small">My Orders</p>
-                           </div>
-                        </a>
-                     </div>
-                     <div class="text-center ms-6">
-                        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" href="#offcanvasExample" role="button" aria-controls="offcanvasRight" class="text-reset">
-                           <div class="text-center">
-                              <div>
-                                 <i class="bi bi-cart2 fs-4"></i>
-                              </div>
-                              <p class="mb-0 d-none d-xl-block small">Shopping Cart</p>
-                           </div>
-                        </a>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </header>
-
-         <!-- Shop Cart -->
-         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-             <div class="offcanvas-header border-bottom">
-                 <div class="text-start">
-                     <h5 id="offcanvasRightLabel" class="mb-0 fs-4">My Cart</h5>
-                 </div>
-                 <div>
-                     <h5 class="mb-0 fs-5">Total: <span id="cartTotal" class="fw-bold">$0.00</span></h5> <!-- Total amount display -->
-                 </div>
-                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-             </div>
-             <div class="offcanvas-body">
-                 <div>
-                     <ul class="list-group list-group-flush" id="cartItems">
-                         <!-- Cart items will be dynamically added here -->
-                     </ul>
-                     <div class="d-flex justify-content-between mt-4">
-                         <a href="#!" class="btn btn-dark">Back to menu</a>
-                         <form method="post" id="checkoutForm" action="{% url 'restaurant_checkout' restaurant.id %}" data-restaurant-id="{{ restaurant.id }}">
-                             {% csrf_token %}
-                             <input type="hidden" id="cartData" name="cart" />
-                             <button id="checkoutButton" class="btn btn-primary" type="submit">Check Out</button>
-                         </form>
-                     </div>
-                 </div>
-             </div>
-         </div>
-
-      <!-- Modal -->
-      <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-4">
-               <div class="modal-header border-0">
-                  <h5 class="modal-title fs-3 fw-bold" id="userModalLabel">Sign Up</h5>
-
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               </div>
-               <div class="modal-body">
-                  <form>
-                     <div class="mb-3">
-                        <label for="fullName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="fullName" placeholder="Enter Your Name" required="" />
-                     </div>
-                     <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter Email address" required="" />
-                     </div>
-
-                     <div class="mb-5">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter Password" required="" />
-                        <small class="form-text">
-                           By Signup, you agree to our
-                           <a href="javascript:void(0)">Terms of Service</a>
-                           &
-                           <a href="javascript:void(0)">Privacy Policy</a>
-                        </small>
-                     </div>
-
-                     <button type="submit" class="btn btn-primary">Sign Up</button>
-                  </form>
-               </div>
-               <div class="modal-footer border-0 justify-content-center">
-                  Already have an account?
-                  <a href="#">Sign in</a>
-               </div>
-            </div>
-         </div>
-      </div>
-
-    
-    <div class="bg-white position-fixed bottom-0 w-100 z-1 shadow-lg d-block d-lg-none text-center">
-   <div class="d-flex justify-content-between align-items-center px-3">
-      <!-- Search Icon with Modal -->
-      <div class="w-25 py-4 text-center">
-         <button class="navbar-toggler collapsed d-lg-none" type="button" data-bs-toggle="modal" data-bs-target="#searchModal" aria-controls="searchModal" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-search"></i>
-         </button>
-      </div>
-
-      <!-- Notification Icon -->
-      <div class="w-25 py-4 text-center">
-          <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" href="#offcanvasExample" role="button" aria-controls="offcanvasRight" class="text-inherit">
-              <div class="position-relative d-inline-block">
-                  <i class="fas fa-bell fa-lg"></i>
-                  <span class="position-absolute top-0 start-100 translate-middle badge bg-danger d-none">
-                      <span class="visually-hidden">unread messages</span>
-                  </span>
-              </div>
-          </a>
-      </div>
-
-      <!-- User Icon -->
-      <div class="w-25 py-4 text-center">
-         <a href="javascript:void(0)" class="text-inherit" data-bs-toggle="modal" data-bs-target="#userModal">
-            <i class="fas fa-user-circle fa-lg"></i>
-         </a>
-      </div>
-
-      <!-- Orders Icon -->
-      <div class="w-25 py-4 text-center">
-         <a href="../pages/account-orders.html" class="text-inherit">
-            <i class="fas fa-archive fa-lg"></i>
-         </a>
-      </div>
-
-
-      <!-- Cart Icon -->
-<div class="w-25 py-4 text-center">
-    <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" href="#offcanvasExample" role="button" aria-controls="offcanvasRight" class="text-inherit">
-        <div class="position-relative d-inline-block">
-            <i class="fas fa-shopping-cart fa-lg"></i>
-            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge bg-danger d-none">0</span>
-        </div>
-    </a>
-</div>
-
-      <!-- Category Icon -->
-      <!-- Category Icon -->
-    <div class="w-25 py-4 text-center">
-       <a class="text-inherit" href="{% url 'category-menu' %}" aria-label="Category Menu">
-          <i class="fas fa-th fa-lg"></i>
-       </a>
-    </div>
-   </div>
-</div>
-
-
-   <section class="my-lg-14 my-8">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 mb-6">
-        <h3 class="mb-0">Our Menu</h3>
-      </div>
-    </div>
-
-    <div class="row g-4">
-      {% for category_products in allProds %}
-        {% for product in category_products %}
-          <div class="col-md-6 col-lg-4">
-            <div class="card p-3 card-product h-100 shadow-sm">
-              <div class="d-flex align-items-center">
-                <img src="{{ product.product_image.url }}" alt="{{ product.name }}" class="me-3" style="width: 90px; height: 90px; object-fit: cover;">
-                <div class="flex-grow-1">
-                  <h5 class="mb-1">
-                    <a href="#" class="text-inherit">{{ product.name }}</a>
-                  </h5>
-                  <div class="small text-muted">
-                    <span>{{ product.category }}</span>
-                    {% for tag in product.tags %}
-                      <span class="mx-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" fill="#C1C7C6" class="bi bi-circle-fill align-middle" viewBox="0 0 16 16">
-                          <circle cx="8" cy="8" r="8" />
-                        </svg>
-                      </span>
-                      <span>{{ tag }}</span>
-                    {% endfor %}
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center mt-2">
-                    <div class="text-start">
-                      <small class="text-warning">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-half"></i>
-                      </small>
-                      <span class="ms-2 fw-bold">${{ product.price }}</span>
-                    </div>
-                    <button id="add-to-cart-{{ product.id }}" class="btn btn-primary btn-sm cart d-flex align-items-center vibrate-button" data-product-id="{{ product.id }}">
-                      Add <i class="bi bi-plus"></i> 
-                    </button>
-                  </div>
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse btn-warning" id="navbarSupportedContent">
+                <!-- Navbar items -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-4">
+                    <!-- Nav item -->
+                    <li class="nav-item">
+                        <a class="nav-link me-4 border-bottom-0" href="https://freshcart.codescandy.com/docs/index.html"
+                            target="_blank">Documentation</a>
+                    </li>
+                    <!-- Nav item -->
+                    <li class="nav-item">
+                        <a class="nav-link border-bottom-0" href="https://codescandy.com/contact-us/"
+                            target="_blank">Support</a>
+                    </li>
+                </ul>
+                <div>
+                    <!-- Purchase button -->
+                    <a href="https://bit.ly/freshcart" target="_blank" class="btn btn-primary">Purchase</a>
                 </div>
-              </div>
             </div>
-          </div>
-        {% endfor %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
+        </div>
+    </nav>
 
+
+
+
+    <!-- Search Modal -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="d-flex align-items-center">
+                        <i class="fas fa-search text-muted me-2"></i>
+                        <input class="form-control border-0 shadow-none" type="search" placeholder="Search Menu" aria-label="Search">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Offcanvas Cart Structure -->
+<div class="offcanvas offcanvas-end" id="offcanvasRight">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body fixed-bottom-padding">
+        
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-box">
+                <i class="fas fa-utensils fa-lg"></i> 
+                <span class="payment-text">SnapMenu</span>
+                <div class="loading-dots">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cart Item Section -->
+        <ul id="cartItems" class="list-group list-group-flush">
+            <!-- Cart items will be dynamically added here -->
+        </ul>
+        
+        <!-- Cart Summary Section (Fixed Bottom) -->
+        <div class="fixed-bottom bg-light p-3">
+            <button id="checkoutButton" class="btn btn-primary w-100 d-flex justify-content-between align-items-center" data-restaurant-id="{{ restaurant.id }}">
+                <span class="badge rounded-circle small-badge bg-white text-dark" id="cartCount">0</span>
+                <span class="text-white">Checkout</span>
+                <span class="fw-bold text-white" id="cartTotal">$0.00</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="ordersSection" class="app-container">
+  <header class="app-header">
+    <h1>My Orders</h1>
+    <button class="btn btn-ms btn-primary">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>Track</span>
+    </button>
+  </header>
+
+  <div class="order-list">
+    {% for order in orders %}
+      <div class="month-divider">
+        <div class="month-label">{{ order.order_date|date:"F Y" }}</div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-image">
+          <img src="path/to/{{ order.restaurant.logo_pic }}" alt="{{ order.restaurant.restaurant_name }}">
+        </div>
+        <div class="order-content">
+          <div class="order-title">{{ order.restaurant.restaurant_name }} - {{ order.status }}</div>
+          <div class="order-details">
+            <span class="order-date">{{ order.order_date|date:"M d, h:i A" }}</span>
+            <span class="order-price">${{ order.amount }}</span>
+          </div>
+          <div class="order-status {{ order.status|lower|slugify }}">{{ order.status }}</div>
+        </div>
+        <button class="btn-reorder" onclick="reorder('{{ order.id }}')">
+          <i class="fas fa-redo"></i>
+        </button>
+      </div>
+    {% empty %}
+      <div class="no-orders">
+        <p>No orders found.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- User Section -->
+<!-- User Section -->
+<div id="userSection" class="fixed-bottom-padding">
+    <section id="profileSection" class="text-center">
+        <div class="profile-header">
+            <div>
+                <img src="" alt="Profile Image" class="profile-img">
+            </div>
+            <div class="profile-name">{{ request.user.first_name }}</div>
+            <div class="profile-status">Food Enthusiast</div>
+            <div class="profile-options">
+                <div>
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+                <div>
+                    <i class="fas fa-pencil-alt"></i>
+                    <span>Edit Profile</span>
+                </div>
+                <div>
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span><a href="{% url 'logout' %}">Logout</a></span>
+                </div>
+            </div>
+        </div>
+        <div class="wallet-section d-flex justify-content-around">
+            <div class="wallet-item">
+                <strong>{{ request.user.customer.wallet_balance }}</strong>
+                <span>Restaurant Credit</span>
+            </div>
+            <div class="wallet-item">
+                <strong>{{ request.user.customer.reward_points }}</strong>
+                <span>Reward Points</span>
+            </div>
+        </div>
+        <div class="loyalty-level">
+            <span>Loyalty Level: </span>
+            <strong>{{ request.user.customer.loyalty_level }}</strong>
+        </div>
+        <div class="menu-section">
+            <div class="menu-item">
+                <i class="fas fa-utensils"></i>
+                <span>My Orders</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-heart"></i>
+                <span>Favorite Dishes</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-star"></i>
+                <span>My Reviews</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-gift"></i>
+                <span>Rewards & Offers</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+ <!-- Icons Section (Position Fixed Bottom) -->
+    <div class="fixed-bottom-icons bg-white position-fixed bottom-0 w-100 z-1 shadow-lg d-block d-lg-none text-center">
+        <div class="d-flex justify-content-between align-items-center px-3">
+            <!-- Our Dish Icon -->
+            <div class="w-20 py-4 text-center">
+                <a href="javascript:void(0)" id="ourDishIcon" class="text-inherit d-flex flex-column align-items-center">
+                    <i class="fas fa-utensils fa-lg"></i>
+                    <span class="icon-label">Dish</span>
+                </a>
+            </div>
+
+            <!-- Orders Icon -->
+            <div class="w-20 py-4 text-center">
+                <a href="javascript:void(0)" id="ordersIcon" class="text-inherit d-flex flex-column align-items-center">
+                    <i class="fas fa-receipt fa-lg"></i>
+                    <span class="icon-label">Orders</span>
+                </a>
+            </div>
+
+            <!-- User Icon -->
+            <div class="w-20 py-4 text-center">
+                <a href="javascript:void(0)" id="userIcon" class="text-inherit d-flex flex-column align-items-center">
+                    <i class="fas fa-user-circle fa-lg"></i>
+                    <span class="icon-label">Profile</span>
+                </a>
+            </div>
+
+            <!-- Cart Icon -->
+            <div class="w-20 py-4 text-center">
+                <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" href="#offcanvasExample" role="button" aria-controls="offcanvasRight" class="text-inherit d-flex flex-column align-items-center">
+                    <div class="position-relative d-inline-block">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                        <span class="icon-label">Cart</span>
+                        <span id="cartIconCount" class="position-absolute top-0 start-100 translate-middle badge bg-danger"></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+<!-- New Section for Table Reservation -->
+<!-- <section id="tableReservationSection" class="my-3">
+        <div class="container fixed-bottom-padding">
+            <div class="row">
+                <div class="col-12 d-flex align-items-center justify-content-between">
+                    
+                    <div class="reservation-details">
+                        <i class="fas fa-bell"></i> Table 1 · 1 Person
+                    </div>
+                    
+                    <div class="action-icons">
+                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-search"></i>
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+
+
+
+<!-- Main Content Section (initially hidden) -->
+<div class="container">
+    <section id="ourDishSection" class="main-content">
+        <h3 class="section-title">Our Dish</h3>
+        <div class="dish-grid">
+            {% for category_products in allProds %}
+                {% for product in category_products %}
+                    <div class="card-product" data-product-id="{{ product.id }}">
+                        <div class="product-image">
+                            <img src="{{ product.product_image.url }}" alt="{{ product.name }}">
+                        </div>
+                        <div class="product-details">
+                            <h5>{{ product.name }}</h5>
+                            <span class="price">${{ product.price }}</span>
+                        </div>
+                        {% if product.status != 'Unavailable' %}
+                            <button class="btn btn-warning btn-sm cart" data-product-id="{{ product.id }}">add +</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+
+
+<!-- Modal HTML -->
+<div class="modal fade" id="tableInfoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="tableInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <div class="modal-body p-4">
+                <!-- Overlay for background image -->
+                <div class="modal-overlay">
+                    <!-- User icon -->
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-circle fa-5x text-muted"></i>
+                    </div>
+                    
+                    <!-- Welcome message -->
+                    <h5 class="text-center mb-4">Dear guest, welcome!</h5>
+                    
+                    <!-- Question -->
+                    <p class="text-center mb-4">How many people will be dining?</p>
+                    
+                    <!-- Number selection grid -->
+                    <form id="tableInfoForm">
+                        <div class="row row-cols-4 g-2 mb-4" id="dinerCountGrid">
+                            <!-- Diner count buttons will be inserted here by JavaScript -->
+                        </div>
+                        
+                        <!-- Confirm button -->
+                        <button type="submit" class="btn btn-primary w-100">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!-- Beverages Section -->
 
 
 
@@ -372,6 +581,8 @@
       <script src="../../../static/menu_dashboard/libs/tiny-slider/dist/min/tiny-slider.js"></script>
       <script src="../../../static/menu_dashboard/js/vendors/tns-slider.js"></script>
       <script src="../../../static/menu_dashboard/js/vendors/zoom.js"></script>
+      <script src="../../../static/menu_dashboard/js/sections.js"></script>
+      <script src="../../../static/menu_dashboard/js/dinerCount.js"></script>
 
 
       <!-- Include other HTML content -->
@@ -381,7 +592,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
  <!-- JavaScript for handling cart and shake animation with sound -->
-<script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
 $(document).ready(function() {
     var cart = {}; // Initialize cart object
 
@@ -390,31 +602,6 @@ $(document).ready(function() {
         cart = JSON.parse(localStorage.getItem('cart')); // Retrieve cart data from local storage
         updateCart(cart); // Update cart content
     }
-
-    // Add to Cart Button Click Event
-    $(document).on('click', '.cart', function() {
-        var button = $(this);
-        var id = button.data('product-id'); // Get product ID
-        var name = button.closest('.card-product').find('a.text-inherit').text(); // Get product name
-        var price = parseFloat(button.closest('.card-product').find('.fw-bold').text().replace('$', '')); // Get product price
-        var imgSrc = button.closest('.card-product').find('img').attr('src'); // Get product image source
-
-        if (cart[id] !== undefined) {
-            cart[id][0]++; // Increment quantity if item already exists in cart
-        } else {
-            cart[id] = [1, name, price, imgSrc]; // Add new item to cart
-        }
-        updateCart(cart); // Update cart content
-
-        // Apply the shake animation
-        button.addClass('shake');
-        button.on('animationend', function() {
-            button.removeClass('shake');
-        });
-
-        // Play the click sound
-        clickSound.play();
-    });
 
     // Function to update cart content
     function updateCart(cart) {
@@ -427,111 +614,160 @@ $(document).ready(function() {
             $('#cartItems').html('<li class="list-group-item">Your cart is empty.</li>');
             $('#cartCount').text(totalItems).addClass('d-none'); // Hide cart count display
             $('#cartTotal').text('$0.00'); // Update total price
+            $('#cartIconCount').addClass('d-none'); // Hide cart icon count
             localStorage.removeItem('cart'); // Remove cart data from local storage
             return;
         }
 
         for (var item in cart) {
-            totalItems += cart[item][0]; // Update total quantity
-            subtotal += cart[item][0] * cart[item][2]; // Calculate subtotal
+            var quantity = cart[item][0];
+            var productName = cart[item][1];
+            var productPrice = parseFloat(cart[item][2]); // Ensure product price is parsed as float
+            var productImage = cart[item][3];
+
+            totalItems += quantity; // Update total quantity
+            subtotal += quantity * productPrice; // Calculate subtotal
+
+            // Build HTML for each cart item
             cartItemsHtml += `
-                <li class="list-group-item py-3 ps-0 border-top">
-                    <div class="row align-items-center">
-                        <div class="col-6 col-md-6 col-lg-7">
-                            <div class="d-flex">
-                                <img src="${cart[item][3]}" alt="${cart[item][1]}" class="icon-shape icon-xxl" />
-                                <div class="ms-3">
-                                    <a href="#!" class="text-inherit">
-                                        <h6 class="mb-0">${cart[item][1]}</h6>
-                                    </a>
-                                    <span><small class="text-muted">$${cart[item][2].toFixed(2)}</small></span>
-                                    <div class="mt-2 small lh-1">
-                                        <a href="#!" class="text-decoration-none text-inherit remove-item" data-product-id="${item}">
-                                            <span class="me-1 align-text-bottom">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 text-success">
-                                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                                                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                                                </svg>
-                                            </span>
-                                            <span class="text-muted">Remove</span>
-                                        </a>
-                                    </div>
-                                </div>
+                <div class="d-flex align-items-center justify-content-between py-2" style="border-bottom: 1px solid #ddd;">
+                    <img src="${productImage}" alt="${productName}" class="img-thumbnail" style="width: 60px; height: 60px;">
+                    <div class="ms-3 me-auto">
+                        <div>${productName}</div>
+                        <div>$${productPrice.toFixed(2)}</div>
+                        <div class="d-flex align-items-center">
+                            <div class="input-group" style="width: 90px;">
+                                <button class="btn btn-outline-secondary btn-sm decrement" data-product-id="${item}" style="width: 20px; height: 20px; padding: 0;">-</button>
+                                <input type="text" value="${quantity}" class="form-control text-center" style="width: 30px; height: 20px; padding: 0;" readonly>
+                                <button class="btn btn-outline-secondary btn-sm increment" data-product-id="${item}" style="width: 20px; height: 20px; padding: 0;">+</button>
                             </div>
-                        </div>
-                        <div class="col-4 col-md-3 col-lg-3">
-                            <div class="input-group input-spinner">
-                                <input type="button" value="-" class="button-minus btn btn-sm" data-product-id="${item}" />
-                                <input type="number" step="1" max="10" value="${cart[item][0]}" name="quantity" class="quantity-field form-control-sm form-input" />
-                                <input type="button" value="+" class="button-plus btn btn-sm" data-product-id="${item}" />
-                            </div>
-                        </div>
-                        <div class="col-2 text-lg-end text-start text-md-end col-md-2">
-                            <span class="fw-bold">$${(cart[item][0] * cart[item][2]).toFixed(2)}</span>
                         </div>
                     </div>
-                </li>`;
+                    <button type="button" class="btn-close btn-sm remove-item" data-product-id="${item}" aria-label="Close"></button>
+                </div>`;
         }
 
-        $('#cartItems').html(cartItemsHtml); // Update cart items
-        $('#cartCount').text(totalItems).removeClass('d-none'); // Update cart count display
+        $('#cartItems').html(cartItemsHtml); // Display updated cart items
+        $('#cartCount').text(totalItems).removeClass('d-none'); // Update and show cart count
         $('#cartTotal').text(`$${subtotal.toFixed(2)}`); // Update total price
-        localStorage.setItem('cart', JSON.stringify(cart)); // Update local storage
+        $('#cartIconCount').text(totalItems).removeClass('d-none'); // Update and show cart icon count
+        localStorage.setItem('cart', JSON.stringify(cart)); // Save cart data to local storage
     }
 
-    // Event listener for minus button click
-    $('.offcanvas-body').on('click', 'button.button-minus', function() {
-        var itemId = $(this).data('product-id'); // Get product ID from data attribute
-        if (cart[itemId]) {
-            cart[itemId][0]--; // Decrement quantity
-            if (cart[itemId][0] === 0) {
-                delete cart[itemId]; // Remove item from cart if quantity is zero
-            }
-            updateCart(cart); // Update cart content
-        }
-    });
+    
+    // Function to show loading overlay
+    function showLoadingOverlay() {
+        $('#loading-overlay').addClass('active'); // Show loading overlay
+    }
 
-    // Event listener for plus button click
-    $('.offcanvas-body').on('click', 'button.button-plus', function() {
-        var itemId = $(this).data('product-id'); // Get product ID from data attribute
-        if (cart[itemId]) {
-            cart[itemId][0]++; // Increment quantity
-            updateCart(cart); // Update cart content
-        }
-    });
+    // Function to hide loading overlay
+    function hideLoadingOverlay() {
+        $('#loading-overlay').removeClass('active'); // Hide loading overlay
+    }
 
-    // Event listener for clear cart button click
-    $('#clearCartButton').click(function() {
-        cart = {}; // Clear the cart
+    function simulateCheckoutProcess(delay) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(); // Resolve the promise after the delay
+        }, delay);
+      });
+    }
+
+    // Quantity Change Buttons Click Event
+    $(document).on('click', '.increment, .decrement', function() {
+        var button = $(this);
+        var id = button.data('product-id'); // Get product ID
+
+        if (button.hasClass('increment')) {
+            cart[id][0]++; // Increment quantity
+        } else if (button.hasClass('decrement') && cart[id][0] > 1) {
+            cart[id][0]--; // Decrement quantity
+        }
         updateCart(cart); // Update cart content
     });
 
-    // Event listener for remove item click
-    $('.offcanvas-body').on('click', '.remove-item', function() {
-        var itemId = $(this).data('product-id'); // Get product ID from data attribute
-        delete cart[itemId]; // Remove item from cart
+    // Remove Item Button Click Event
+    $(document).on('click', '.remove-item', function() {
+        var id = $(this).data('product-id'); // Get product ID
+        delete cart[id]; // Remove item from cart
         updateCart(cart); // Update cart content
     });
 
-    // Event listener for checkout button click
-    $('#checkoutButton').click(function(e) {
-        e.preventDefault();
-        // Ensure the cart is not empty
-        if (Object.keys(cart).length === 0) {
-            alert('Your cart is empty.');
+    
+    // Checkout Button Click Event
+   $('#checkoutButton').click(function() {
+      var restaurantId = $(this).data('restaurant-id'); // Replace with your restaurant ID from template context
+
+      if (Object.keys(cart).length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+
+      showLoadingOverlay(); // Show loading overlay during checkout
+
+      // Simulate checkout process with a delay using Promise
+      simulateCheckoutProcess(2000) // Adjust the delay in milliseconds (here: 2 seconds)
+        .then(() => {
+          hideLoadingOverlay(); // Hide the loading overlay after the delay
+          window.location.href = `/dashboard/${restaurantId}/checkout/`;
+        });
+    });
+
+    // Add to Cart Button Click Event
+    $(document).on('click', '.cart', function() {
+        var button = $(this);
+        var productId = button.data('product-id'); // Get product ID
+        var productName = button.closest('.card-product').find('h5').text().trim(); // Get product name
+        var productPrice = parseFloat(button.closest('.card-product').find('.price').text().replace(/[^\d.-]/g, '')); // Get product price and parse float
+        var productImage = button.closest('.card-product').find('img').attr('src').trim(); // Get product image source
+
+        if (isNaN(productPrice)) {
+            // Handle invalid price gracefully (e.g., log an error, skip adding to cart)
+            console.error('Invalid product price:', button.closest('.card-product').find('.price').text().trim());
             return;
         }
 
-        // Set the cart data in a hidden form field before submission
-        $('#cartData').val(JSON.stringify(cart));
+        if (cart[productId] !== undefined) {
+            cart[productId][0]++; // Increment quantity if item already exists in cart
+        } else {
+            cart[productId] = [1, productName, productPrice, productImage]; // Add new item to cart
+        }
 
-        // Redirect to the checkout page
-        var restaurantId = $('#checkoutForm').data('restaurant-id'); // Assuming restaurant ID is stored in a data attribute
-        window.location.href = `/dashboard/${restaurantId}/checkout/`;
+        updateCart(cart); // Update cart content
+
+        // Apply the shake animation
+        button.closest('.card-product').addClass('shake');
+        setTimeout(function() {
+            button.closest('.card-product').removeClass('shake');
+        }, 1000); // Remove shake class after 1 second
+
+        // Vibrate the phone
+        if (navigator.vibrate) {
+            navigator.vibrate(200);
+        }
     });
 });
 </script>
+
+
+
+<script>
+    $(document).ready(function() {
+        $('.card-product').click(function() {
+            // Remove 'selected' class from all product cards
+            $('.card-product').removeClass('selected');
+            // Add 'selected' class to the clicked product card
+            $(this).addClass('selected');
+
+        });
+
+    });
+
+</script>
+
+  <!-- Script to show the modal on page load and handle form submission -->
+
+
+
    </body>
 </html>

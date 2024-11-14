@@ -17,6 +17,9 @@
   <!-- CSS Implementing Plugins -->
   <link rel="stylesheet" href="../../static/vendor/bootstrap-icons/font/bootstrap-icons.css">
 
+  <!-- Include Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   <!-- CSS Front Template -->
 
   <link rel="preload" href="../../static/css/theme.min.css" data-hs-appearance="default" as="style">
@@ -117,6 +120,13 @@
   return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
 }
             </script>
+
+<style>
+    #map {
+        height: 400px; /* Adjust height as needed */
+    }
+</style>
+
 </head>
 
 <body>
@@ -154,44 +164,48 @@
               </div>
     </div>
 
-    <!-- Form -->
+  <!-- Your existing form HTML -->
+<form id="create-restaurant-form" action="{% url 'restaurant_profile' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Form fields -->
     <div class="mb-4">
         <label class="form-label" for="restaurant_name">Restaurant Name</label>
-        <input type="text" class="form-control form-control-lg" name="restaurant_name" id="restaurant_name" placeholder="restaurant name" required>
+        <input type="text" class="form-control form-control-lg" name="restaurant_name" id="restaurant_name" placeholder="Restaurant name" required>
         <span class="invalid-feedback">Please enter your restaurant name.</span>
     </div>
-    <!-- End Form -->
 
-    <!-- Form -->
     <div class="mb-4">
-        <label class="form-label" for="mobile">Mobile</label>
-        <input type="number" class="form-control form-control-lg" name="mobile" id="mobile " placeholder="mobile " required>
-        <span class="invalid-feedback">Please enter your restaurant number.</span>
+        <label class="form-label" for="mobile">Contact</label>
+        <input type="text" class="form-control form-control-lg" name="mobile" id="mobile" placeholder="Mobile" required>
+        <span class="invalid-feedback">Please enter your restaurant contact number.</span>
     </div>
-    <!-- End Form -->
 
-    <!-- Form -->
     <div class="mb-4">
-        <label class="form-label" for="mobile">Address</label>
-        <input type="text" class="form-control form-control-lg" name="address" id="address " placeholder="address " required>
+        <label class="form-label" for="address">Address</label>
+        <input type="text" class="form-control form-control-lg" name="address" id="address" placeholder="Address" required>
         <span class="invalid-feedback">Please enter your restaurant address.</span>
     </div>
-    <!-- End Form -->
 
-    <!-- Form -->
     <div class="mb-4">
-        <label class="form-label" for="mobile">Restaurant Logo</label>
-        <input type="file" multiple class="form-control form-control-lg" name="logo_pic" id="logo_pic" placeholder="restaurant logo " required>
-        <span class="invalid-feedback">Please enter your restaurant logo.</span>
+        <label class="form-label" for="logo_pic">Restaurant Logo</label>
+        <input type="file" class="form-control form-control-lg" name="logo_pic" id="logo_pic" required>
+        <span class="invalid-feedback">Please upload your restaurant logo.</span>
     </div>
-    <!-- End Form -->
 
+   
+    <!-- Hidden latitude and longitude fields -->
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+
+    <!-- Map container -->
+    <div id="mapid" style="height: 300px;"></div>
 
     <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary btn-lg" style="background-color: #0aad0a;">Create an account</button>
+        <button type="submit" class="btn btn-primary btn-lg" style="background-color: #0aad0a;">Create Restaurant Profile</button>
     </div>
 </form>
-<!-- End Form -->
+
 
           </div>
         </div>
@@ -235,5 +249,57 @@
       }
     })()
   </script>
+
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+
+  <!-- Include Leaflet.js and plugins -->
+  <!-- Include Leaflet JS library -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>>
+
+<!-- JavaScript for Leaflet Map and Geocoding -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var addressInput = document.getElementById('address');
+        var latitudeInput = document.getElementById('latitude');
+        var longitudeInput = document.getElementById('longitude');
+
+        var map = L.map('mapid').setView([0, 0], 13); // Initialize Leaflet map with default view
+
+        // Add tile layer from OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Initialize Leaflet Control Geocoder for address autocomplete
+        var geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false,
+            collapsed: true,
+            geocoder: L.Control.Geocoder.nominatim({
+                geocodingQueryParams: {
+                    countrycodes: 'us' // Adjust country code as needed
+                }
+            })
+        }).on('markgeocode', function(e) {
+            var bbox = e.geocode.bbox;
+            var center = e.geocode.center;
+
+            // Update map view and set marker
+            map.fitBounds(bbox);
+            L.marker(center).addTo(map);
+
+            // Update latitude and longitude inputs
+            latitudeInput.value = center.lat;
+            longitudeInput.value = center.lng;
+        }).addTo(map);
+
+        // Handle form submission
+        var form = document.getElementById('create-restaurant-form');
+        form.addEventListener('submit', function(event) {
+            // Validate form fields or submit via AJAX if needed
+        });
+    });
+</script>
 </body>
 </html>

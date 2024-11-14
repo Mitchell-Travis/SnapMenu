@@ -16,12 +16,17 @@ from .models import (
     Feedback, 
     Table, 
     Restaurant,
-    OrderProduct 
+    OrderProduct,
+    Earnings,
+    UserCode,
+    Wallet,
+    TopUpRequest 
     )
 from django.utils.html import format_html
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from PIL import Image
+from django.db.models import Sum
 
 
 # Register your models here.
@@ -31,7 +36,9 @@ admin.site.register(Customer, CustomerAdmin)
 
 
 class RestaurantAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('restaurant_name', 'address', 'mobile', 'latitude', 'longitude', 'business_hours')
+    search_fields = ('restaurant_name', 'address')
+
 admin.site.register(Restaurant, RestaurantAdmin)
 
 class ProductAdmin(admin.ModelAdmin):
@@ -71,10 +78,36 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.register(Orders, OrderAdmin)
 
 
+class EarningsAdmin(admin.ModelAdmin):
+    list_display = ('order', 'service_charge', 'currency')
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        total_earnings = Earnings.objects.aggregate(total=Sum('service_charge'))['total'] or 0
+        extra_context['total_earnings'] = total_earnings
+        return super(EarningsAdmin, self).changelist_view(request, extra_context=extra_context)
+
+admin.site.register(Earnings, EarningsAdmin)
+
 class FeedbackAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Feedback, FeedbackAdmin)
 # Register your models here.
+
+
+class UserCodeAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(UserCode, UserCodeAdmin)
+
+
+class WalletAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Wallet, WalletAdmin)
+
+
+class TopUpRequestAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(TopUpRequest, TopUpRequestAdmin)
 
 
 class TableAdmin(admin.ModelAdmin):

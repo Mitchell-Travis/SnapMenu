@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta content="Codescandy" name="author" />
+    <title>SnapMenu</title>
+    <!-- Favicon icon-->
+    <link rel="shortcut icon" type="image/x-icon" href="../../../static/menu_dashboard/images/favicon/favicon.ico" />
+
+    <!-- Libs CSS -->
+    <link href="../../../static/menu_dashboard/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="../../../static/menu_dashboard/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
+    <link href="../../../static/menu_dashboard/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
+
+    <!-- Include Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="../../../static/menu_dashboard/css/theme.min.css" />
+</head>
+
+<style type="text/css">
+/* Loading overlay styles */
+/* Loading overlay styles */
+.loading-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker background to ensure content stands out */
+    z-index: 9999; /* Ensure it's on top of all other content */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+/* Dim the background without affecting overlay content */
+body.loading {
+    overflow: hidden; /* Prevent scrolling */
+    /* You might also want to add other styles to ensure the page doesn't interact while loading */
+}
+
+/* Show the overlay when active */
+.loading-overlay.active {
+    display: flex;
+}
+
+/* Overlay content styling */
+.loading-box {
+    background-color: #333; /* Background color of the loading box */
+    padding: 25px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff; /* Text color */
+    text-align: center; /* Center text */
+}
+
+.fas.fa-wallet, .fas.fa-exclamation-circle {
+    font-size: 2.4rem; /* Icon size */
+    color: #fff; /* Icon color */
+}
+
+.payment-text {
+    font-size: 1rem; /* Text size */
+    margin-top: 10px; /* Spacing from icon */
+}
+
+.loading-dots {
+    display: flex;
+    align-items: center;
+    margin-top: 10px; /* Spacing from text */
+}
+
+.loading-dots div {
+    width: 5px;
+    height: 5px;
+    margin: 0 5px;
+    background-color: #fff;
+    border-radius: 50%;
+    animation: showDot 0.5s infinite alternate;
+}
+
+.loading-dots div:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.loading-dots div:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes showDot {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/*End loading effect*/
+
+</style>
+
+<body>
+    <main>
+        <section class="mb-lg-14 mb-8 mt-8">
+            <div class="container">
+                <!-- Header -->
+                <div class="row mb-5">
+                    <div class="col-12 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="fw-bold mb-0">Checkout</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Menu</a></li>
+                                    <li class="breadcrumb-item"><a href="#">Cart</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <button id="backButton" class="btn btn-sm btn-outline-success">
+                            <i class="fas fa-arrow-left me-2"></i> Back
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Left column: Order summary and Payment options -->
+                    <div class="col-lg-8 col-md-12 mb-4 mb-lg-0">
+                        <!-- Order Summary Card -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Order Summary</h5>
+                                <span class="badge bg-primary" id="itemCount">0 items</span>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush" id="orderDetailsList">
+                                    <!-- Dynamically generated cart items will be inserted here -->
+                                </ul>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Subtotal</span>
+                                        <span id="itemSubtotal" class="fw-bold">$0.00</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Service Fee</span>
+                                        <span id="serviceFee" class="fw-bold">$0.51</span>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-between fw-bold">
+                                        <span>Total</span>
+                                        <span id="cartSubtotal" class="text-primary">$0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Options Card -->
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Payment Method</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="cashonDelivery" value="Cash on Delivery">
+                                    <label class="form-check-label" for="cashonDelivery">
+                                        <i class="fas fa-money-bill-alt me-2 text-success"></i> Cash on Delivery
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="cardPayment" value="Card Payment" disabled>
+                                    <label class="form-check-label text-muted" for="cardPayment">
+                                        <i class="fas fa-credit-card me-2"></i> Card Payment (Coming Soon)
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="mobilePay" value="Mobile Pay" disabled>
+                                    <label class="form-check-label text-muted" for="mobilePay">
+                                        <i class="fas fa-mobile-alt me-2"></i> Mobile Pay (Coming Soon)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Loading Overlay -->
+                        <div class="loading-overlay" id="loading-overlay">
+                            <div class="loading-box">
+                                <i class="fas fa-utensils fa-lg"></i> 
+                                <span class="payment-text">SnapMenu</span>
+                                <div class="loading-dots">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <!-- Right column: Order confirmation -->
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card shadow-sm sticky-lg-top" style="top: 2rem;">
+                            <div class="card-header bg-light text-white">
+                                <h5 class="mb-0">Confirm Your Order</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-4">Please review your order details and payment method before placing your order.</p>
+                                <div class="d-grid">
+                                    <button id="checkoutButton" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-lock me-2"></i> Place Order
+                                    </button>
+                                </div>
+                                <p class="text-muted small mt-3 text-center">
+                                    By placing your order, you agree to our <a href="#">terms and conditions</a>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="../../../static/menu_dashboard/libs/flatpickr/dist/fatpickr.min.js"></script>
+    <!-- Libs JS -->
+    <!-- <script src="../../../static/menu_dashboard/libs/jquery/dist/jquery.min.js"></script> -->
+    <script src="../../../static/menu_dashboard/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/menu_dashboard/libs/simplebar/dist/simplebar.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="../../../static/menu_dashboard/js/theme.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- JavaScript -->
+    <script>
+       $(document).ready(function () {
+
+    // Constants
+    const SERVICE_FEE = 0.51;
+    const MIN_LOADING_DURATION = 2000;  // Minimum duration for the loading overlay in milliseconds
+
+    // Variables to manage timer
+    let loadingStartTime;
+
+    // Function to show loading overlay
+    function showLoadingOverlay() {
+        $('#loading-overlay').addClass('active');
+        $('body').addClass('loading');
+        loadingStartTime = Date.now();  // Record the start time of loading
+    }
+
+    // Function to hide loading overlay
+    function hideLoadingOverlay() {
+        $('#loading-overlay').removeClass('active');
+        $('body').removeClass('loading');
+    }
+
+    // Function to populate order details
+    function populateOrderDetails() {
+        const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+        let orderDetails = '';
+        let subtotal = 0.00;
+
+        Object.keys(cart).forEach(id => {
+            const item = cart[id];
+            const itemTotal = item[0] * item[2];
+            subtotal += itemTotal;
+            orderDetails += `
+                <li class="list-group-item px-4 py-3">
+                    <div class="row align-items-center">
+                        <div class="col-2 col-md-2">
+                            <img src="${item[3]}" alt="${item[1]}" class="img-fluid" />
+                        </div>
+                        <div class="col-5 col-md-5">
+                            <h6 class="mb-0">${item[1]}</h6>
+                            <span><small class="text-muted">$${item[2].toFixed(2)}</small></span>
+                        </div>
+                        <div class="col-2 col-md-2 text-center text-muted">
+                            <span>${item[0]}</span>
+                        </div>
+                        <div class="col-3 text-lg-end text-start text-md-end col-md-3">
+                            <span class="fw-bold">$${itemTotal.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </li>`;
+        });
+
+        $('#orderDetailsList').html(orderDetails);
+        $('#itemSubtotal').text(`$${subtotal.toFixed(2)}`);
+        $('#serviceFee').text(`$${SERVICE_FEE.toFixed(2)}`);
+        $('#cartSubtotal').text(`$${(subtotal + SERVICE_FEE).toFixed(2)}`);
+    }
+
+    populateOrderDetails();
+
+    $('#checkoutButton').click(function(e) {
+        e.preventDefault();
+
+        const cart = localStorage.getItem('cart');
+        const paymentMethod = $('input[name="payment_method"]:checked').val();
+
+        if (!cart) {
+            return alert("Your cart is empty!");
+        }
+
+        if (!paymentMethod) {
+            return alert("Please select a payment method!");
+        }
+
+        const subtotal = parseFloat($('#itemSubtotal').text().replace('$', ''));
+        const totalAmount = subtotal + SERVICE_FEE;
+        const restaurantId = '{{ restaurant.id }}';  // Ensure this is correctly rendered in the template
+        const csrfToken = '{{ csrf_token }}';  // Ensure this is correctly rendered in the template
+
+        showLoadingOverlay(); // Show loading overlay when place order button is clicked
+
+        $.ajax({
+            type: 'POST',
+            url: `/dashboard/${restaurantId}/checkout/`,
+            data: {
+                cart: cart,
+                payment_method: paymentMethod,
+                total_amount: totalAmount,
+                csrfmiddlewaretoken: csrfToken,
+            },
+            success: function(response) {
+                const elapsedTime = Date.now() - loadingStartTime;
+                const remainingTime = Math.max(MIN_LOADING_DURATION - elapsedTime, 0); // Time to wait before hiding
+
+                // Hide loading overlay and then handle the success message after the minimum duration
+                setTimeout(function() {
+                    hideLoadingOverlay(); // Hide loading overlay
+                    if (response.message === 'Order placed successfully') {
+                        // Clear the cart from localStorage
+                        localStorage.removeItem('cart');
+                        
+                        // Redirect to order success page
+                        window.location.href = `/dashboard/${response.order_id}/order_success/`;
+                    } else {
+                        // Handle other success messages if necessary
+                        console.log(response.message);
+                    }
+                }, remainingTime); // Delay to ensure minimum loading duration
+            },
+            error: function() {
+                hideLoadingOverlay(); // Ensure loading overlay is hidden on error
+                alert("Error placing order. Please try again."); // Display error message
+            }
+        });
+    });
+});
+
+
+
+
+
+
+    </script>
+
+    <script>
+    $(document).ready(function () {
+        // Your existing JavaScript code here
+        // Make sure to update the selectors if needed
+
+        function updateItemCount() {
+            var cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            var count = Object.values(cart).reduce((total, item) => total + item[0], 0);
+            $('#itemCount').text(count + (count === 1 ? ' item' : ' items'));
+        }
+
+        updateItemCount();
+
+        // Back button functionality
+        $('#backButton').click(function() {
+            window.history.back();
+        });
+
+        // Your existing checkout button functionality
+        $('#checkoutButton').click(function(e) {
+            // Your existing checkout logic here
+        });
+    });
+    </script>
+
+</body>
+
+</html>

@@ -8,16 +8,18 @@ from django.conf import settings
 import os
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import uuid
 
 
 # Custom User Model
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, password=None):
-        if not email:
-            raise ValueError('Users must have an email address')
+    def create_user(self, email=None, username=None, password=None):
         if not username:
             raise ValueError('Users must have a username')
+        
+        if email is None:
+            email = f'{username}@example.com'
 
         user = self.model(
             email=self.normalize_email(email),
@@ -29,7 +31,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, username, password=None):
         user = self.create_user(
-            email=self.normalize_email(email),
+            email=email,
             username=username,
             password=password,
         )
@@ -51,17 +53,18 @@ def get_default_profile_image():
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(verbose_name='email', max_length=30, unique=True)
+    email = models.EmailField(verbose_name='email', max_length=30, unique=True, null=True, blank=True)
     username = models.CharField(max_length=30, verbose_name='username', unique=False)
     first_name = models.CharField(max_length=30, verbose_name='first name', null=True, blank=True)
     last_name = models.CharField(max_length=30, verbose_name='last name', null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now_add=True)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)  # Add this line
-    is_staff = models.BooleanField(default=False)  # Add this line
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     hide_email = models.BooleanField(default=True)
-    profile_image = models.ImageField(max_length=230, upload_to=get_profile_image_filepath, default=get_default_profile_image, blank=True, null=True)
+    profile_image = models.ImageField(max_length=230, upload_to='profile_images/', default='default.jpg', blank=True, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -71,14 +74,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
-    def get_profile_image_filename(self):
-        return str(self.profile_image)[str(self.profile_image).index('profile_images/' + str(self.pk) + "/"):]
-
-    # For checking permissions. to keep it simple all admin have ALL permissons
     def has_perm(self, perm, obj=None):
         return self.is_admin
 
-    # For checking permissions. to keep it simple all admin have ALL permissons
     def has_module_perms(self, app_label):
         return self.is_admin
 
@@ -99,3 +97,14 @@ class VerifyConfirmation(models.Model):
 
     def __str__(self):
         return self.verified_code
+
+
+# Create your models here.
+class Profile(models.Model):
+    user=models.OneToOneField(User,   on_delete=models.CASCADE,related_name="profile")
+    phone_number=models.CharField(max_length=15)
+    otp=models.CharField(max_length=100,null=True,blank=True)
+    uid=models.CharField(default=f'{uuid.uuid4}',max_length=200)
+
+
+

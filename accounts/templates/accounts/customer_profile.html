@@ -1,230 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <!-- Required Meta Tags Always Come First -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delvrr - Profile Setup</title>
+    <style>
+        :root {
+            --primary-color: #28a745;
+            --primary-dark: #218838;
+            --background-color: #f8f9fa;
+            --text-color: #333333;
+        }
 
-  <!-- Title -->
-  <title>Customer Profile</title>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+            height: 100%;
+            background-color: var(--background-color);
+        }
 
-  <!-- Favicon icon-->
-<link rel="shortcut icon" type="image/x-icon" href="../../static/menu_dashboard/images/favicon/favicon.ico">
+        .container {
+            display: flex;
+            height: 100%;
+        }
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+        .profile-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: white;
+        }
 
-  <!-- CSS Implementing Plugins -->
-  <link rel="stylesheet" href="../../static/vendor/bootstrap-icons/font/bootstrap-icons.css">
+        .menu-panel {
+            flex: 1;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('../../../static/img/pngtree-a-restaurant-showing-a-few-dishes-image_13029601.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
 
-  <!-- CSS Front Template -->
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
 
-  <link rel="preload" href="../../static/css/theme.min.css" data-hs-appearance="default" as="style">
-  <link rel="preload" href="../../static/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-style: italic;
+        }
 
-  <style data-hs-appearance-onload-styles>
-    *
-    {
-      transition: unset !important;
-    }
+        .form-container {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-sizing: border-box;
+        }
 
-    body
-    {
-      opacity: 0;
-    }
-  </style>
+        .input-group {
+            width: 100%;
+            position: relative;
+        }
 
-  <script>
-            window.hs_config = {"autopath":"@@autopath","deleteLine":"hs-builder:delete","deleteLine:build":"hs-builder:build-delete","deleteLine:dist":"hs-builder:dist-delete","previewMode":false,"startPath":"/index.html","vars":{"themeFont":"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap","version":"?v=1.0"},"layoutBuilder":{"extend":{"switcherSupport":true},"header":{"layoutMode":"default","containerMode":"container-fluid"},"sidebarLayout":"default"},"themeAppearance":{"layoutSkin":"default","sidebarSkin":"default","styles":{"colors":{"primary":"#377dff","transparent":"transparent","white":"#fff","dark":"132144","gray":{"100":"#f9fafc","900":"#1e2022"}},"font":"Inter"}},"languageDirection":{"lang":"en"},"skipFilesFromBundle":{"dist":["assets/js/hs.theme-appearance.js","assets/js/hs.theme-appearance-charts.js","assets/js/demo.js"],"build":["assets/css/theme.css","assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js","assets/js/demo.js","assets/css/theme-dark.css","assets/css/docs.css","assets/vendor/icon-set/style.css","assets/js/hs.theme-appearance.js","assets/js/hs.theme-appearance-charts.js","node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js","assets/js/demo.js"]},"minifyCSSFiles":["assets/css/theme.css","assets/css/theme-dark.css"],"copyDependencies":{"dist":{"*assets/js/theme-custom.js":""},"build":{"*assets/js/theme-custom.js":"","node_modules/bootstrap-icons/font/*fonts/**":"assets/css"}},"buildFolder":"","replacePathsToCDN":{},"directoryNames":{"src":"../../src","dist":"../../dist","build":"../../build"},"fileNames":{"dist":{"js":"theme.min.js","css":"theme.min.css"},"build":{"css":"theme.min.css","js":"theme.min.js","vendorCSS":"vendor.min.css","vendorJS":"vendor.min.js"}},"fileTypes":"jpg|png|svg|mp4|webm|ogv|json"}
-            window.hs_config.gulpRGBA = (p1) => {
-  const options = p1.split(',')
-  const hex = options[0].toString()
-  const transparent = options[1].toString()
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
 
-  var c;
-  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-    c= hex.substring(1).split('');
-    if(c.length== 3){
-      c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-    }
-    c= '0x'+c.join('');
-    return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',' + transparent + ')';
-  }
-  throw new Error('Bad Hex');
-}
-            window.hs_config.gulpDarken = (p1) => {
-  const options = p1.split(',')
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
 
-  let col = options[0].toString()
-  let amt = -parseInt(options[1])
-  var usePound = false
+        .input-group .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
 
-  if (col[0] == "#") {
-    col = col.slice(1)
-    usePound = true
-  }
-  var num = parseInt(col, 16)
-  var r = (num >> 16) + amt
-  if (r > 255) {
-    r = 255
-  } else if (r < 0) {
-    r = 0
-  }
-  var b = ((num >> 8) & 0x00FF) + amt
-  if (b > 255) {
-    b = 255
-  } else if (b < 0) {
-    b = 0
-  }
-  var g = (num & 0x0000FF) + amt
-  if (g > 255) {
-    g = 255
-  } else if (g < 0) {
-    g = 0
-  }
-  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
-}
-            window.hs_config.gulpLighten = (p1) => {
-  const options = p1.split(',')
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-sizing: border-box;
+        }
 
-  let col = options[0].toString()
-  let amt = parseInt(options[1])
-  var usePound = false
+        .btn-signup {
+            background-color: var(--primary-color);
+            color: white;
+        }
 
-  if (col[0] == "#") {
-    col = col.slice(1)
-    usePound = true
-  }
-  var num = parseInt(col, 16)
-  var r = (num >> 16) + amt
-  if (r > 255) {
-    r = 255
-  } else if (r < 0) {
-    r = 0
-  }
-  var b = ((num >> 8) & 0x00FF) + amt
-  if (b > 255) {
-    b = 255
-  } else if (b < 0) {
-    b = 0
-  }
-  var g = (num & 0x0000FF) + amt
-  if (g > 255) {
-    g = 255
-  } else if (g < 0) {
-    g = 0
-  }
-  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
-}
-            </script>
+        .btn-signup:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .form-check {
+            text-align: left;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check input {
+            margin-right: 0.5rem;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .menu-panel h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .menu-panel p {
+            font-size: 1.2rem;
+            max-width: 80%;
+        }
+
+        .text-primary-green {
+            color: #0aad0a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .menu-panel {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div class="container">
+        <div class="profile-panel">
+            <div class="logo">Delvrr</div>
+            <div class="tagline">"Complete your profile for a better experience."</div>
+            <div class="form-container">
+                <form method="POST" action="" enctype="multipart/form-data" class="signup-form" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="restaurant_id" value="{{ restaurant_id }}">
+                    <input type="hidden" name="restaurant_slug" value="{{ restaurant_slug }}">
+                    <!-- <input type="hidden" name="next" value="{{ next }}"> -->
+                    <div class="input-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" name="first_name" id="first_name" placeholder="Fist Name" required>
+                        <div class="error-message" id="firstNameError"></div>
+                    </div>
 
-  <script src="../../static/js/hs.theme-appearance.js"></script>
+                     <div class="input-group">
+                        <label for="first_name">Last Name</label>
+                        <input type="text" name="last_name" id="first_name" placeholder="Last Name" required>
+                        <div class="error-message" id="firstNameError"></div>
+                    </div>
 
-  <!-- ========== MAIN CONTENT ========== -->
-  <main id="content" role="main" class="main">
-    <div class="position-fixed top-0 end-0 start-0 bg-img-start">
-      <!-- Shape -->
-      <div class="shape shape-bottom zi-1">
-        <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
-          <polygon fill="#fff" points="0,273 1921,273 1921,0 " />
-        </svg>
-      </div>
-      <!-- End Shape -->
-    </div>
-
-    <!-- Content -->
-    <div class="container py-5 py-sm-7">
-      <a class="d-flex justify-content-center mb-5" href="{% url 'home' %}">
-        <img class="zi-2" style="width: 8rem;">
-      </a>
-
-      <div class="mx-auto" style="max-width: 30rem;">
-        <!-- Card -->
-        <div class="card card-lg mb-5">
-          <div class="card-body">
-           <!-- Form -->
-    <form method="POST" action="" enctype="multipart/form-data" class="js-validate needs-validation" novalidate>
-          {% csrf_token %}
-          <div class="text-center">
-              <div class="mb-5">
-                  <h1 class="display-5">Profile Setup</h1>
-              </div>
-    </div>
-
-    <!-- Form -->
-    <div class="mb-4">
-        <label class="form-label" for="first_name">First Name</label>
-        <input type="text" class="form-control form-control-lg" name="first_name" id="first_name" placeholder="first name" required>
-        <span class="invalid-feedback">Please enter your first name.</span>
-    </div>
-    <!-- End Form -->
-
-    <!-- Form -->
-    <div class="mb-4">
-        <label class="form-label" for="last_name">Last Name</label>
-        <input type="text" class="form-control form-control-lg" name="last_name" id="last_name" placeholder="last name" required>
-        <span class="invalid-feedback">Please enter your last name.</span>
-    </div>
-    <!-- End Form -->
-
-    <!-- Form -->
-    <div class="mb-4">
-        <label class="form-label" for="mobile">Mobile</label>
-        <input type="number" class="form-control form-control-lg" name="mobile" id="mobile " placeholder="mobile " required>
-        <span class="invalid-feedback">Please enter your mobile number.</span>
-    </div>
-    <!-- End Form -->
-
-    <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary btn-lg" style="background-color: #0aad0a;">Create an account</button>
-    </div>
-</form>
-<!-- End Form -->
-
-          </div>
+                    <div class="input-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="text" name="mobile" id="mobile" placeholder="Mobile Number" required>
+                        <div class="error-message" id="mobileError"></div>
+                    </div>
+                    <button type="submit" class="btn btn-signup">Complete Profile</button>
+                </form>
+            </div>
         </div>
-        <!-- End Card -->
-
-        
-      </div>
+        <div class="menu-panel">
+            <h2>Welcome to Delvrr</h2>
+            <p>Complete your profile to enhance your dining experience and get personalized recommendations.</p>
+        </div>
     </div>
-    <!-- End Content -->
-  </main>
-  <!-- ========== END MAIN CONTENT ========== -->
 
-  <!-- JS Global Compulsory  -->
-  <script src="../../static/vendor/jquery/dist/jquery.min.js"></script>
-  <script src="../../static/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
-  <script src="../../static/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- JS Implementing Plugins -->
-  <script src="../../static/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
-
-  <!-- JS Front -->
-  <script src="../../static/js/theme.min.js"></script>
-
-  <!-- JS Plugins Init. -->
-  <script>
-    (function() {
-      window.onload = function () {
-        // INITIALIZATION OF BOOTSTRAP VALIDATION
-        // =======================================================
-        HSBsValidation.init('.js-validate', {
-          onSubmit: data => {
-            // data.event.preventDefault()
-            // alert('Submited')
-          }
-        })
-
-
-        // INITIALIZATION OF TOGGLE PASSWORD
-        // =======================================================
-        new HSTogglePassword('.js-toggle-password')
-      }
-    })()
-  </script>
+    <script>
+        // Toggle password visibility logic if needed in other forms
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+    </script>
 </body>
+
 </html>
